@@ -1,20 +1,33 @@
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 const UserSchima = require('../models/user');
 
 const createUser = (req, res) => {
-  const { name, about, avatar } = req.body;
-  UserSchima.create({ name, about, avatar })
-    .then((user) => res.status(201).send({ data: user }))
-    .catch((err) => {
-      if (err.name === 'Validation Error') {
-        const { errors } = err;
-        const message = `${Object.values(errors)
-          .map((error) => error.message)
-          .join(', ')}`;
-        res.status(400).send(message);
-      } else {
-        res.status(500).send({ message: 'somthing went wrong..' });
+  const { name, about, avatar, email, password } = req.body;
+  Users.findOne({ email })
+    .then((user) => {
+      if (user) {
+        // user already exists
+        throw new ConflictError('a user with this email already exists');
       }
-    });
+      // user does not exist, so spit out a hashed password
+      return bcrypt.hash(password, 10);
+    })
+    .then((hash) =>
+      UserSchima.create({ name, about, avatar, email, password: hash })
+        .then((user) => res.status(201).send({ data: user }))
+        .catch((err) => {
+          if (err.name === 'Validation Error') {
+            const { errors } = err;
+            const message = `${Object.values(errors)
+              .map((error) => error.message)
+              .join(', ')}`;
+            res.status(400).send(message);
+          } else {
+            res.status(500).send({ message: 'somthing went wrong..' });
+          }
+        })
+    );
 };
 const updateUserData = (req, res) => {
   const { _id } = req.user;

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-
+const validator = require('validator');
 const { Schema, model } = mongoose;
 
-const { urlRegex } = require('../utils/regex');
+const { emailRegex, urlRegex } = require('../utils/regex');
 
 const userSchema = new Schema(
   {
@@ -24,6 +24,20 @@ const userSchema = new Schema(
       validate: {
         validator: (value) => value.match(urlRegex),
         message: 'invalid url',
+      },
+    },
+    email: {
+      type: String,
+      required: [true, 'Email is required'],
+      unique: true,
+      validate: {
+        validator: (value) => validator.isEmail(value),
+        message: 'invalid Email please, use a valid Email address',
+      },
+      password: {
+        type: String,
+        required: [true, 'Password is required'],
+        select: false,
       },
     },
   },
