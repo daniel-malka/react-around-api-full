@@ -2,6 +2,31 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserSchima = require('../models/user');
 
+class NotFoundError extends Error {
+  constructor(message) {
+    super(message);
+    this.statusCode = 404;
+  }
+}
+
+module.exports = NotFoundError;
+
+const { JWT_SECRET } = process.env;
+
+const login = (req, res, next) => {
+  const { email, password } = req.body;
+  return UserSchima.findUserByCredentials(email, password)
+    .then((user) => {
+      const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        expiresIn: '7d',
+      });
+      res.send({ data: user.toJSON(), token });
+    })
+    .catch(() => {
+      next(new UnauthorizedError('Incorrect email or password'));
+    });
+};
+
 const createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
   Users.findOne({ email })
@@ -106,11 +131,31 @@ const getUserId = (req, res) => {
       }
     });
 };
+const getCurrentUser = (req, res, next) => {
+  UserSchima.findById(req.user._id)
+    .orFail(() => {
+      throw new NotFoundError('No user found with this Id');
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError') {
+        next(new BadRequestError(err.message));
+      } else if (err.name === 'ValidationError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
+    });
+};
 
 module.exports = {
   createUser,
   updateUserInfo,
   updateUserAvatar,
   getUsers,
+  getCurrentUser,
   getUserId,
+  login,
 };

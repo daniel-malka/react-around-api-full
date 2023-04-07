@@ -7,20 +7,24 @@ const { emailRegex, urlRegex } = require('../utils/regex');
 const userSchema = new Schema(
   {
     name: {
+      required: true,
       type: String,
       minlength: 2,
       maxlength: 30,
-      required: true,
+      default: 'Jacques Cousteau',
     },
     about: {
+      required: true,
       type: String,
       minlength: 2,
       maxlength: 30,
-      required: true,
+      default: 'Explorer',
     },
     avatar: {
-      type: String,
       required: true,
+      type: String,
+      default:
+        'https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg',
       validate: {
         validator: (value) => value.match(urlRegex),
         message: 'invalid url',
