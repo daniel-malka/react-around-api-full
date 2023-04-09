@@ -38,13 +38,14 @@ const UserSchema = new Schema(
         validator: (value) => validator.isEmail(value),
         message: 'invalid Email please, use a valid Email address',
       },
-      password: {
-        type: String,
-        required: [true, 'Password is required'],
-        select: false,
-      },
+    },
+    password: {
+      type: String,
+      required: [true, 'Password is required'],
+      select: false,
     },
   },
+
   { versionKey: false }
 );
 UserSchema.statics.findUserByCredentials = function (email, password) {
@@ -54,8 +55,7 @@ UserSchema.statics.findUserByCredentials = function (email, password) {
       if (!user) {
         return Promise.reject(new Error('Incorrect email or password'));
       }
-      return bcrypt.compare(password, user.password)
-      .then((matched) => {
+      return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           return Promise.reject(new Error('Incorrect email or password'));
         }
