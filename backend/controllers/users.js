@@ -6,7 +6,7 @@ const { JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
   const { email, password } = req.body;
-  return UserSchima.findUserByCredentials(email, password)
+  UserSchima.findUserByCredentials({ email, password })
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',

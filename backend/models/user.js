@@ -21,7 +21,6 @@ const userSchema = new Schema(
       default: 'Explorer',
     },
     avatar: {
-      required: true,
       type: String,
       default:
         'https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg',

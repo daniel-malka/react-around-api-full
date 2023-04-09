@@ -9,8 +9,6 @@ const { createUser, login } = require('../controllers/users');
 router.post('/signin', login);
 router.post('/signup', createUser);
 
-// router.use(auth);
-
 router.use('/', userRouter);
 router.use('/', cardRouter);
 router.use('*', nonRoute);
