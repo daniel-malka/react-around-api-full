@@ -1,32 +1,34 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const UserSchima = require('../models/user');
+const UserSchema = require('../models/user');
 
-const { JWT_SECRET } = process.env;
+const { JWT_SECRET } = require('../utils/config');
 
-const login = (req, res, next) => {
+function login(req, res, next) {
   const { email, password } = req.body;
-  UserSchima.findUserByCredentials({ email, password })
+
+  return UserSchema.findUserByCredentials(email, password)
     .then((user) => {
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
+        
         expiresIn: '7d',
       });
-      res.send({ data: user.toJSON(), token });
+      res.send({ user, token });
     })
     .catch(() => {
-      next(new Error('Incorrect email or password'));
+      next(new Error(`Incorrect email: ${email} or password: ${password}`));
     });
-};
+}
 
-const createUser = (req, res) => {
+const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
-  UserSchima.findOne({ email })
+  UserSchema.findOne({ email })
     .then((user) => {
       if (user) {
         // user already exists
 
         const error = new Error('a user with this email already exists');
-        error.status = 400;
+        error.status = 409;
 
         throw error;
       }
@@ -34,17 +36,19 @@ const createUser = (req, res) => {
       return bcrypt.hash(password, 11);
     })
     .then((hash) =>
-      UserSchima.create({ name, about, avatar, email, password: hash })
-        .then((user) => res.status(201).send({ data: user }))
+      UserSchema.create({ name, about, avatar, email, password: hash })
+        .then((user) => res.status(201).send({ user }))
         .catch((err) => {
           if (err.name === 'Validation Error') {
-            const { errors } = err;
-            const message = `${Object.values(errors)
-              .map((error) => error.message)
-              .join(', ')}`;
-            res.status(400).send(message);
+            next(
+              new Error(
+                `${Object.values(err.errors)
+                  .map((error) => error.message)
+                  .join(', ')}`
+              )
+            );
           } else {
-            res.status(500).send({ message: 'somthing went wrong..' });
+            next(err);
           }
         })
     );
@@ -53,7 +57,7 @@ const updateUserData = (req, res) => {
   const { _id } = req.user;
   const { name, about, avatar } = req.body;
 
-  UserSchima.findByIdAndUpdate(
+  UserSchema.findByIdAndUpdate(
     _id,
     { $set: { name, about, avatar } },
 
@@ -99,7 +103,7 @@ const updateUserAvatar = (req, res) => {
 };
 
 const getUsers = (req, res) => {
-  UserSchima.find({})
+  UserSchema.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch(() =>
       res
@@ -109,7 +113,7 @@ const getUsers = (req, res) => {
 };
 const getUserId = (req, res) => {
   const { id } = req.params;
-  UserSchima.findById(id)
+  UserSchema.findById(id)
     .orFail(() => {
       const error = new Error('No user found with this Id');
       error.status = 404;
@@ -127,7 +131,7 @@ const getUserId = (req, res) => {
     });
 };
 const getCurrentUser = (req, res, next) => {
-  UserSchima.findById(req.user._id)
+  UserSchema.findById(req.user._id)
     .orFail(() => {
       const error = new Error('No user found with this Id');
       error.status = 404;

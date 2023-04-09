@@ -1,10 +1,11 @@
 const mongoose = require('mongoose');
 const validator = require('validator');
+const bcrypt = require('bcryptjs');
 const { Schema, model } = mongoose;
 
-const { emailRegex, urlRegex } = require('../utils/regex');
+const { urlRegex } = require('../utils/regex');
 
-const userSchema = new Schema(
+const UserSchema = new Schema(
   {
     name: {
       required: true,
@@ -46,4 +47,27 @@ const userSchema = new Schema(
   },
   { versionKey: false }
 );
-module.exports = model('user', userSchema);
+UserSchema.statics.findUserByCredentials = function (email, password) {
+  return this.findOne({ email })
+    .select('+password')
+    .then((user) => {
+      if (!user) {
+        return Promise.reject(new Error('Incorrect email or password'));
+      }
+      return bcrypt.compare(password, user.password)
+      .then((matched) => {
+        if (!matched) {
+          return Promise.reject(new Error('Incorrect email or password'));
+        }
+        return user;
+      });
+    });
+};
+
+UserSchema.methods.toJSON = function () {
+  const obj = this.toObject();
+  const { password, ...rest } = obj;
+  return rest;
+};
+
+module.exports = model('user', UserSchema);
