@@ -27,6 +27,7 @@
   },
   "dependencies": {
     "-": "^0.0.1",
+    "bcryptjs": "^2.4.3",
     "D": "^1.0.0",
     "eslint-config-airbnb-base": "^15.0.0",
     "eslint-plugin-import": "^2.26.0",

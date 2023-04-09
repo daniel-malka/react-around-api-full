@@ -2,15 +2,6 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserSchima = require('../models/user');
 
-class NotFoundError extends Error {
-  constructor(message) {
-    super(message);
-    this.statusCode = 404;
-  }
-}
-
-module.exports = NotFoundError;
-
 const { JWT_SECRET } = process.env;
 
 const login = (req, res, next) => {
@@ -23,20 +14,24 @@ const login = (req, res, next) => {
       res.send({ data: user.toJSON(), token });
     })
     .catch(() => {
-      next(new UnauthorizedError('Incorrect email or password'));
+      next(new Error('Incorrect email or password'));
     });
 };
 
 const createUser = (req, res) => {
   const { name, about, avatar, email, password } = req.body;
-  Users.findOne({ email })
+  UserSchima.findOne({ email })
     .then((user) => {
       if (user) {
         // user already exists
-        throw new ConflictError('a user with this email already exists');
+
+        const error = new Error('a user with this email already exists');
+        error.status = 400;
+
+        throw error;
       }
       // user does not exist, so spit out a hashed password
-      return bcrypt.hash(password, 10);
+      return bcrypt.hash(password, 11);
     })
     .then((hash) =>
       UserSchima.create({ name, about, avatar, email, password: hash })
@@ -134,15 +129,15 @@ const getUserId = (req, res) => {
 const getCurrentUser = (req, res, next) => {
   UserSchima.findById(req.user._id)
     .orFail(() => {
-      throw new NotFoundError('No user found with this Id');
+      const error = new Error('No user found with this Id');
+      error.status = 404;
+      throw error;
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
-      if (err.name === 'CastError') {
-        next(new BadRequestError(err.message));
-      } else if (err.name === 'ValidationError') {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
         next(new BadRequestError(err.message));
       } else {
         next(err);
