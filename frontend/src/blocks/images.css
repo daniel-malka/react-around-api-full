@@ -1,0 +1,6 @@
+.images {
+  display: flex;
+  box-sizing: border-box;
+  min-height: 742px;
+
+}

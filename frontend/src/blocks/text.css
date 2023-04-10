@@ -1,0 +1,95 @@
+.text {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  max-width: 415px;
+  row-gap: 16px;
+  margin-right: auto;
+}
+.text__title {
+  display: flex;
+  column-gap: 18px;
+}
+.text__name {
+  color: white;
+  font-weight: 500;
+  font-size: 42px;
+  line-height: 48px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+.text__edit {
+  box-sizing: border-box;
+  border: 1px solid white;
+  margin-top: 12px;
+  width: 24px;
+  height: 24px;
+  background-color: #000;
+  background-image: url('../images/pen.svg');
+  background-position: center;
+  background-repeat: no-repeat;
+  transition-duration: 500ms;
+}
+.text__edit:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+.text__about {
+  box-sizing: border-box;
+  color: white;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+@media screen and (max-width: 680px) {
+  .text__name {
+    max-width: 270px;
+    font-size: 32px;
+
+    line-height: 37px;
+  }
+  .text__about {
+    max-width: 320px;
+    font-size: 14px;
+    line-height: 16.94px;
+  }
+}
+@media screen and (max-width: 620px) {
+  .text {
+    margin-right: 0;
+    margin-bottom: 36px;
+    row-gap: 14px;
+  }
+  .text__title {
+    padding-top: 27px;
+    column-gap: 10px;
+  }
+  .text__edit {
+    margin-top: 0;
+    align-self: flex-start;
+    min-width: 18px;
+    min-height: 18px;
+  }
+  .text__name {
+    max-width: 196px;
+    font-size: 22px;
+    line-height: 26.63px;
+  }
+  .text__about {
+    text-align: center;
+    max-width: 282px;
+  }
+}

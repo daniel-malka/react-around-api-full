@@ -1,0 +1,68 @@
+.desc {
+  box-sizing: border-box;
+  border-radius: 0 0 10px 10px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #fff;
+  padding-left: 21px;
+  padding-top: 25px;
+  padding-right: 30px;
+}
+
+.desc__text {
+  box-sizing: border-box;
+  max-width: 207px;
+  font-size: 25px;
+  line-height: 30.05px;
+  font-weight: 901;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  margin-block-start: 0;
+  margin-block-end: 0;
+  margin-inline-start: 0;
+  margin-inline-end: 0;
+  padding-inline-start: 0;
+  padding-bottom: 31px;
+}
+.like {
+  position: relative;
+}
+.like__button {
+  width: 21px;
+  height: 19px;
+  background-image: url("../images/like.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #fff;
+  border-width: 0;
+  transition-duration: 350ms;
+}
+.button_liked {
+  background-image: url("../images/like_black.svg");
+}
+.like__counter {
+  position: absolute;
+  top: 6px;
+  left: 6px;
+  width: 12px;
+  height: 12px;
+  color: black;
+}
+
+.like__button:hover {
+  opacity: 0.5;
+  cursor: pointer;
+}
+
+@media screen and (max-width: 680px) {
+  .desc__text {
+    max-width: 180px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  .desc__text {
+    max-width: 210px;
+  }
+}
