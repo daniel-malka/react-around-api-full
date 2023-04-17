@@ -19,7 +19,9 @@
     "test": "jest",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build"
+    "deploy": "gh-pages -d build",
+    "deploy2":"npm run build && scp -r ./build/* danielmalka999@around-dan.chickenkiller.com:/home/danielmalka999/frontend"
+
   },
   "eslintConfig": {
     "extends": [

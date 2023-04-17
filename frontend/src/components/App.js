@@ -1,21 +1,21 @@
-import React, { useEffect, useState } from 'react';
-import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import Header from './Header';
-import Main from './Main';
-import Footer from './Footer';
-import ProtectedRoute from './ProtectedRoute';
-import AddPlacePopup from './AddPlacePopup';
-import InfoTooltip from './InfoToolTip';
-import PopupWithImage from './PopupWithImage';
-import DeletePopupForm from './DeletePopupForm';
-import EditAvatarPopup from './EditAvatarPopup';
-import EditProfilePopup from './EditProfilePopup';
+import React, { useEffect, useState } from "react";
+import { Redirect, Route, Switch, useHistory } from "react-router-dom";
+import CurrentUserContext from "../contexts/CurrentUserContext";
+import Header from "./Header";
+import Main from "./Main";
+import Footer from "./Footer";
+import ProtectedRoute from "./ProtectedRoute";
+import AddPlacePopup from "./AddPlacePopup";
+import InfoTooltip from "./InfoToolTip";
+import PopupWithImage from "./PopupWithImage";
+import DeletePopupForm from "./DeletePopupForm";
+import EditAvatarPopup from "./EditAvatarPopup";
+import EditProfilePopup from "./EditProfilePopup";
 
-import api from '../utils/Api';
-import { signUp, signIn, checkToken } from '../utils/Auth';
-import Register from './Register';
-import Login from './Login';
+import api from "../utils/Api";
+import { signUp, signIn, checkToken } from "../utils/Auth";
+import Register from "./Register";
+import Login from "./Login";
 
 function App() {
   const [currentUser, setCurrentUser] = useState({});
@@ -26,29 +26,29 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const history = useHistory();
   const [selectedCard, setSelectedCard] = React.useState({
-    name: '',
-    link: '',
+    name: "",
+    link: "",
   });
   const [isCheckingToken, setIsCheckingToken] = useState(true);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [tooltipStatus, setTooltipStatus] = useState(false);
-  const [email, setEmail] = useState({ email: 'email@email.com' });
+  const [email, setEmail] = useState({ email: "email@email.com" });
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [cards, setCards] = useState([]);
-  const [token, setToken] = useState(localStorage.getItem('token'));
+  const [token, setToken] = useState(localStorage.getItem("token"));
   useEffect(() => {
     if (token) {
       api
         .getUserInfo(token)
         .then((user) => {
-          setCurrentUser(user);
+          setCurrentUser({ user });
         })
         .catch((err) => console.log(err));
 
       api
         .getCards(token)
         .then((res) => {
-          setCards(res);
+          setCards({res});
         })
         .catch((err) => console.log(err));
     }
@@ -56,20 +56,20 @@ function App() {
 
   //token check
   useEffect(() => {
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (token) {
       checkToken(token)
         .then((res) => {
           if (res._id) {
             setIsLoggedIn(true);
             setEmail(res.data.email);
-            history.push('/around-react');
+            history.push("/");
             api.setUserInfo({ email: res.data.email });
           }
         })
         .catch((err) => {
           console.log(err);
-          history.push('signin');
+          history.push("signin");
         })
         .finally(() => {
           setIsCheckingToken(false);
@@ -84,7 +84,7 @@ function App() {
     signUp(email, password)
       .then((res) => {
         if (res.data._id) {
-          history.push('/signin');
+          history.push("/signin");
         } else {
           setTooltipStatus(false);
         }
@@ -103,10 +103,10 @@ function App() {
       .then((res) => {
         if (res.token) {
           setIsLoggedIn(true);
-          localStorage.setItem('token', res.token);
+          localStorage.setItem("token", res.token);
           setEmail(email);
           setToken(res.token);
-          history.push('/around-react');
+          history.push("/");
         }
       })
       .catch((err) => {
@@ -120,23 +120,23 @@ function App() {
 
   const handleLogout = () => {
     setIsLoggedIn(false);
-    localStorage.removeItem('token');
-    history.push('/signin');
+    localStorage.removeItem("token");
+    history.push("/signin");
   };
 
   useEffect(() => {
     const closeByEvents = (e) => {
-      if (e.key === 'Escape' || e.target.classList.contains('popup_open')) {
+      if (e.key === "Escape" || e.target.classList.contains("popup_open")) {
         closeAllPopups();
       }
     };
 
-    document.addEventListener('keydown', closeByEvents);
-    document.addEventListener('click', closeByEvents);
+    document.addEventListener("keydown", closeByEvents);
+    document.addEventListener("click", closeByEvents);
 
     return () => {
-      document.removeEventListener('keydown', closeByEvents);
-      document.removeEventListener('click', closeByEvents);
+      document.removeEventListener("keydown", closeByEvents);
+      document.removeEventListener("click", closeByEvents);
     };
   }, []);
 
@@ -251,9 +251,9 @@ function App() {
   }
 
   const handleEyeIcon = (e) => {
-    const eye = document.querySelector('.auth-form__input-password');
+    const eye = document.querySelector(".auth-form__input-password");
 
-    eye.classList.toggle('auth-form__password-holder-active');
+    eye.classList.toggle("auth-form__password-holder-active");
   };
 
   return isCheckingToken ? (
@@ -338,10 +338,10 @@ function App() {
             />
           </>
         ) : (
-          ''
+          ""
         )}
         {isLoggedIn ? (
-          ''
+          ""
         ) : (
           <InfoTooltip
             isOpen={isInfoTooltipOpen}

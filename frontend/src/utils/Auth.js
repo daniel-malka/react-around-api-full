@@ -6,7 +6,6 @@ export const signUp = (email, password) => {
     headers: {
       Accept: 'application/json',
       'Content-Type': 'application/json',
-      Authorization: 'dabe6f5b-76a9-454b-a126-949e6970cf03',
     },
     body: JSON.stringify({ email, password }),
   });
