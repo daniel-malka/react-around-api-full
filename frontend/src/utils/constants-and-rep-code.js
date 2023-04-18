@@ -2,12 +2,12 @@ let node_env = "production";
 
 let BASE_URL =
   node_env === "production"
-    ? "https://www.dan.malk.chickenkiller.com/"
+    ? "https://www.around-dan.chickenkiller.com/"
     : "http://localhost:3000";
-    
+
 let BASE_URL2 =
   node_env === "production"
-    ? "https://api.dan.malk.chickenkiller.com"
+    ? "https://api.around-dan.chickenkiller.com"
     : " http://localhost:3000";
 
 const customFetch = (url, headers) => {

@@ -268,7 +268,7 @@ function App() {
         />
         <Switch>
           <ProtectedRoute
-            path="/around-react"
+            path="/"
             isLoggedIn={isLoggedIn}
             isCheckingToken={isCheckingToken}
           >
@@ -288,7 +288,7 @@ function App() {
               handleSignUp={handleSignUp}
               handleEyeIcon={handleEyeIcon}
             />
-          </Route>
+         </Route>
 
           <Route path="/signin">
             <Login handleLogin={handleLogin} handleEyeIcon={handleEyeIcon} />
@@ -296,7 +296,7 @@ function App() {
 
           <Route>
             {isLoggedIn ? (
-              <Redirect to="/around-react" />
+              <Redirect to="/" />
             ) : (
               <Redirect to="/signup" />
             )}
