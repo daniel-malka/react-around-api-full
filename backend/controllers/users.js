@@ -18,43 +18,6 @@ function login(req, res, next) {
       next(new Error(`Incorrect email or password`));
     });
 }
-const createUser = (req, res, next) => {
-  const { name, about, avatar, email, password } = req.body;
-  UserSchema.findOne({ email })
-    .then((user) => {
-      if (user) {
-        // user already exists
-
-        const error = new Error('a user with this email already exists');
-        error.status = 409;
-
-        throw error;
-      }
-      // user does not exist, so spit out a hashed password
-      return bcrypt.hash(password, 11);
-    })
-    .then((hash) =>
-      UserSchema.create({ name, about, avatar, email, password: hash })
-        .then((user) => {
-          // Return the user object with password field excluded
-          const { password, ...userWithoutPassword } = user.toObject();
-          res.status(201).send({ user: userWithoutPassword });
-        })
-        .catch((err) => {
-          if (err.name === 'Validation Error') {
-            next(
-              new Error(
-                `${Object.values(err.errors)
-                  .map((error) => error.message)
-                  .join(', ')}`
-              )
-            );
-          } else {
-            next(err);
-          }
-        })
-    );
-};
 // const createUser = (req, res, next) => {
 //   const { name, about, avatar, email, password } = req.body;
 //   UserSchema.findOne({ email })
@@ -72,7 +35,11 @@ const createUser = (req, res, next) => {
 //     })
 //     .then((hash) =>
 //       UserSchema.create({ name, about, avatar, email, password: hash })
-//         .then((user) => res.status(201).send({ user }))
+//         .then((user) => {
+//           // Return the user object with password field excluded
+//           const { password, ...userWithoutPassword } = user.toObject();
+//           res.status(201).send({ user: userWithoutPassword });
+//         })
 //         .catch((err) => {
 //           if (err.name === 'Validation Error') {
 //             next(
@@ -88,6 +55,39 @@ const createUser = (req, res, next) => {
 //         })
 //     );
 // };
+const createUser = (req, res, next) => {
+  const { name, about, avatar, email, password } = req.body;
+  UserSchema.findOne({ email })
+    .then((user) => {
+      if (user) {
+        // user already exists
+
+        const error = new Error('a user with this email already exists');
+        error.status = 409;
+
+        throw error;
+      }
+      // user does not exist, so spit out a hashed password
+      return bcrypt.hash(password, 11);
+    })
+    .then((hash) =>
+      UserSchema.create({ name, about, avatar, email, password: hash })
+        .then((user) => res.status(201).send({ user }))
+        .catch((err) => {
+          if (err.name === 'Validation Error') {
+            next(
+              new Error(
+                `${Object.values(err.errors)
+                  .map((error) => error.message)
+                  .join(', ')}`
+              )
+            );
+          } else {
+            next(err);
+          }
+        })
+    );
+};
 const updateUserData = (req, res) => {
   const { _id } = req.user;
   const { name, about, avatar } = req.body;

@@ -3,6 +3,7 @@ const expressWinston = require('express-winston');
 
 const requestLogger = expressWinston.logger({
   transports: [
+    new winston.transports.Console(),
     new winston.transports.File({
       filename: 'logs/request.log',
     }),
@@ -15,6 +16,7 @@ const errorLogger = expressWinston.errorLogger({
     new winston.transports.File({
       filename: 'logs/error.log',
     }),
+    new winston.transports.Console(),
   ],
   format: winston.format.json(),
 });
