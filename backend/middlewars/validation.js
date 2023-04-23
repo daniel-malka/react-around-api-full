@@ -2,6 +2,19 @@ const { celebrate, Joi } = require('celebrate');
 const validator = require('validator');
 const { ObjectId } = require('mongoose').Types;
 
+const validateObjectId = celebrate({
+  params: Joi.object().keys({
+    cardId: Joi.string()
+      .required()
+      .custom((value, helpers) => {
+        if (ObjectId.isValid(value)) {
+          return value;
+        }
+        return helpers.message('Invalid id');
+      }),
+  }),
+});
+
 const validateURL = (value, helpers) => {
   if (validator.isURL(value)) {
     return value;
@@ -43,7 +56,7 @@ const validateUserBody = celebrate({
       'string.required': 'Email is required',
       'string.email': 'Valid email is required',
     }),
-    password: Joi.string().required().min(8).messages({
+    password: Joi.string().required().min(4).messages({
       'string.empty': 'Password is required',
       'string.min': 'Password must be at least 8 characters long',
     }),
@@ -68,33 +81,6 @@ const validateAvatar = celebrate({
     avatar: Joi.string()
       .custom(validateURL)
       .message('Invalid URL for avatar link'),
-  }),
-});
-
-// const validateObjectId = celebrate({
-//   params: Joi.object().keys({
-//     id: Joi.string()
-//       .required()
-//       .custom((value, helpers) => {
-//         if (ObjectId.isValid(value)) {
-//           return value;
-//         }
-//         return helpers.message('Invalid id');
-//       }),
-//   }),
-// });
-
-// validate the params id
-const validateObjectId = celebrate({
-  params: Joi.object().keys({
-    cardId: Joi.string()
-      .required()
-      .custom((value, helpers) => {
-        if (ObjectId.isValid(value)) {
-          return value;
-        }
-        return helpers.message('Invalid id');
-      }),
   }),
 });
 

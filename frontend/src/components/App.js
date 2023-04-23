@@ -172,7 +172,6 @@ function App() {
         });
     }
   }
-
   function handleEditAvatarClick() {
     setIsEditAvatarOpen(true);
   }
@@ -242,12 +241,14 @@ function App() {
         token
       )
       .then((newCard) => {
-        setCards([newCard, ...cards]);
-        closeAllPopups();
+        api.getUserInfo(token).then((userInfo) => {
+          const updatedCard = { ...newCard, owner: userInfo._id };
+          setCards([updatedCard, ...cards]);
+          closeAllPopups();
+        });
       })
       .catch((err) => console.log(err));
   }
-
   function handleUpdateUser({ name, about }) {
     api
       .setUserInfo({ name, about }, token)
@@ -303,11 +304,7 @@ function App() {
           </Route>
 
           <Route>
-            {isLoggedIn ? (
-              <Redirect to="/" />
-            ) : (
-              <Redirect to="/signup" />
-            )}
+            {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signup" />}
           </Route>
         </Switch>
 
