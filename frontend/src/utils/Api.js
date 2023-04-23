@@ -1,4 +1,4 @@
-import { BASE_URL, BASE_URL2, customFetch } from './constants-and-rep-code';
+import { BASE_URL, BASE_URL2, customFetch } from "./constants-and-rep-code";
 
 export class Api {
   constructor({ baseUrl }) {
@@ -8,7 +8,7 @@ export class Api {
   getCards(token) {
     return customFetch(`${this._baseUrl}/cards`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
@@ -16,42 +16,47 @@ export class Api {
   getUserInfo(token) {
     return customFetch(`${this._baseUrl}/users/me`, {
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
   }
 
   setUserInfo({ name, about }, token) {
+    console.log("token", token);
     return customFetch(`${this._baseUrl}/users/me`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
 
       body: JSON.stringify({
-        name,
-        about,
+        name: name,
+        about: about,
       }),
     });
   }
 
-  addCard({ name, link }, token) {
+  addCard({ name, link, owner }, token) {
     return customFetch(`${this._baseUrl}/cards`, {
-      method: 'POST',
-      headers: this._headers,
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
       body: JSON.stringify({
-        name,
-        link,
+        name: name,
+        link: link,
+        owner: owner,
       }),
     });
   }
   editAvatar(avatar, token) {
     return customFetch(`${this._baseUrl}/users/me/avatar`, {
-      method: 'PATCH',
+      method: "PATCH",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
 
@@ -62,27 +67,27 @@ export class Api {
   }
   deleteCard(cardId, token) {
     return customFetch(`${this._baseUrl}/cards/${cardId}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
   }
   dislikeCard(id, token) {
     return customFetch(`${this._baseUrl}/cards/likes/${id}`, {
-      method: 'DELETE',
+      method: "DELETE",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
   }
   likeCard(id, token) {
     return customFetch(`${this._baseUrl}/cards/likes/${id}`, {
-      method: 'PUT',
+      method: "PUT",
       headers: {
-        'Content-Type': 'application/json',
+        "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
@@ -90,6 +95,6 @@ export class Api {
 }
 
 const api = new Api({
-  baseUrl: BASE_URL2,
+  baseUrl: BASE_URL,
 });
 export default api;

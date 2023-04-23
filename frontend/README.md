@@ -44,9 +44,9 @@ If you want to contribute to this project, follow these steps:
 Fork this repository.
 Create a branch: git checkout -b <branch_name>
 Make your changes and commit them: git commit -m '<commit_message>'
-Push to the original branch: git push origin <around-react-auth>/<location>
+Push to the original branch: git push origin </>/<location>
 Create the pull request.
 License
 This project is licensed under the [Practicum 100] License. See the LICENSE file for details.
 
-Link ---> https://daniel-malka.github.io/around-react-auth
+Link ---> https://around-dan.chickenkiller.com/

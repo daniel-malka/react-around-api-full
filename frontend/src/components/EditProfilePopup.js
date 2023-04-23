@@ -1,13 +1,13 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 
-import CurrentUserContext from '../contexts/CurrentUserContext';
-import PopupWithForm from './PopupWithForm';
+import CurrentUserContext from "../contexts/CurrentUserContext";
+import PopupWithForm from "./PopupWithForm";
 
 function EditProfilePopup({ isOpen, onUpdateUser, onClose }) {
   const currentUser = React.useContext(CurrentUserContext);
 
-  const [name, setName] = useState('');
-  const [about, setAbout] = useState('');
+  const [name, setName] = useState("");
+  const [about, setAbout] = useState("");
 
   function handleNameChange(e) {
     setName(e.target.value);
@@ -48,7 +48,7 @@ function EditProfilePopup({ isOpen, onUpdateUser, onClose }) {
             id="name"
             name="name"
             placeholder="Name"
-            value={name || ''}
+            value={name || ""}
             className="fieldset__input fieldset__input_type_name"
             minLength={2}
             maxLength={40}
@@ -63,7 +63,7 @@ function EditProfilePopup({ isOpen, onUpdateUser, onClose }) {
             id="about"
             name="about"
             placeholder="about"
-            value={about || ''}
+            value={about || ""}
             className="fieldset__input fieldset__input_type_about"
             minLength={2}
             maxLength={200}

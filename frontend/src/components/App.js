@@ -36,19 +36,20 @@ function App() {
   const [isDeletePopupOpen, setIsDeletePopupOpen] = useState(false);
   const [cards, setCards] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
+
   useEffect(() => {
     if (token) {
       api
         .getUserInfo(token)
         .then((user) => {
-          setCurrentUser({ user });
+          setCurrentUser(user);
         })
         .catch((err) => console.log(err));
 
       api
         .getCards(token)
         .then((res) => {
-          setCards({res});
+          setCards(res);
         })
         .catch((err) => console.log(err));
     }
@@ -63,28 +64,28 @@ function App() {
           if (res._id) {
             setIsLoggedIn(true);
             setEmail(res.data.email);
-            history.push("/");
+            history.push("/around-react");
             api.setUserInfo({ email: res.data.email });
           }
         })
         .catch((err) => {
           console.log(err);
-          history.push("signin");
+          history.push("/signin");
         })
         .finally(() => {
           setIsCheckingToken(false);
         });
     } else {
       setIsCheckingToken(false);
-      // handleLogout();
     }
   }, []);
 
   const handleSignUp = (email, password) => {
     signUp(email, password)
       .then((res) => {
-        if (res.data._id) {
+        if (res.user._id) {
           history.push("/signin");
+          setTooltipStatus(true);
         } else {
           setTooltipStatus(false);
         }
@@ -106,7 +107,8 @@ function App() {
           localStorage.setItem("token", res.token);
           setEmail(email);
           setToken(res.token);
-          history.push("/");
+          setCurrentUser(res);
+          history.push("/around-react");
         }
       })
       .catch((err) => {
@@ -148,7 +150,7 @@ function App() {
       api
         .dislikeCard(card._id, token)
         .then((likedCard) => {
-          const newCards = cards.map((card) => {
+          const newCards = cards.data.map((card) => {
             return card._id === likedCard._id ? likedCard : card;
           });
           setCards(newCards);
@@ -160,7 +162,7 @@ function App() {
       api
         .likeCard(card._id, token)
         .then((likedCard) => {
-          const newCards = cards.map((card) => {
+          const newCards = cards.data.map((card) => {
             return card._id === likedCard._id ? likedCard : card;
           });
           setCards(newCards);
@@ -232,7 +234,13 @@ function App() {
 
   function handleAddPlaceSubmit(card) {
     api
-      .addCard(card, token)
+      .addCard(
+        {
+          name: card.name,
+          link: card.link,
+        },
+        token
+      )
       .then((newCard) => {
         setCards([newCard, ...cards]);
         closeAllPopups();
@@ -240,9 +248,9 @@ function App() {
       .catch((err) => console.log(err));
   }
 
-  function handleUpdateUser({ name, about }, token) {
+  function handleUpdateUser({ name, about }) {
     api
-      .setUserInfo({ name, about })
+      .setUserInfo({ name, about }, token)
       .then((data) => {
         setCurrentUser(data);
         closeAllPopups();
@@ -268,7 +276,7 @@ function App() {
         />
         <Switch>
           <ProtectedRoute
-            path="/"
+            path="/around-react"
             isLoggedIn={isLoggedIn}
             isCheckingToken={isCheckingToken}
           >
@@ -288,7 +296,7 @@ function App() {
               handleSignUp={handleSignUp}
               handleEyeIcon={handleEyeIcon}
             />
-         </Route>
+          </Route>
 
           <Route path="/signin">
             <Login handleLogin={handleLogin} handleEyeIcon={handleEyeIcon} />
@@ -296,7 +304,7 @@ function App() {
 
           <Route>
             {isLoggedIn ? (
-              <Redirect to="/" />
+              <Redirect to="/around-react" />
             ) : (
               <Redirect to="/signup" />
             )}
