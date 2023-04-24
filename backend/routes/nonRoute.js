@@ -8,7 +8,7 @@ class NotFoundError extends Error {
   }
 }
 
-//module.exports = NotFoundError;
+module.exports = NotFoundError;
 
 router.use((req, res, next) => {
   next(new NotFoundError('The requested resource was not found'));

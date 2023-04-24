@@ -64,7 +64,6 @@ const createUser = (req, res, next) => {
 
         const error = new Error('a user with this email already exists');
         error.status = 409;
-
         throw error;
       }
       // user does not exist, so spit out a hashed password

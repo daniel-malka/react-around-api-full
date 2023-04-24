@@ -23,7 +23,6 @@ export class Api {
   }
 
   setUserInfo({ name, about }, token) {
-    console.log("token", token);
     return customFetch(`${this._baseUrl}/users/me`, {
       method: "PATCH",
       headers: {
@@ -38,7 +37,7 @@ export class Api {
     });
   }
 
-  addCard({ name, link, owner }, token) {
+  createCard({ name, link, owner }, token) {
     return customFetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: {
@@ -52,6 +51,7 @@ export class Api {
       }),
     });
   }
+
   editAvatar(avatar, token) {
     return customFetch(`${this._baseUrl}/users/me/avatar`, {
       method: "PATCH",
@@ -66,7 +66,7 @@ export class Api {
     });
   }
   deleteCard(cardId, token) {
-    return customFetch(`${this._baseUrl}/cards/${cardId}`, {
+    return customFetch(`${this._baseUrl}/${cardId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -74,8 +74,9 @@ export class Api {
       },
     });
   }
+
   dislikeCard(id, token) {
-    return customFetch(`${this._baseUrl}/cards/likes/${id}`, {
+    return customFetch(`${this._baseUrl}/${id}/likes`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -84,7 +85,7 @@ export class Api {
     });
   }
   likeCard(id, token) {
-    return customFetch(`${this._baseUrl}/cards/likes/${id}`, {
+    return customFetch(`${this._baseUrl}/${id}/likes`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

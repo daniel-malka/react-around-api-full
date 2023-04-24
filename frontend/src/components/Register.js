@@ -16,11 +16,7 @@ const Register = ({ handleSignUp, handleEyeIcon }) => {
     };
     handleSignUp(userData.email, userData.password);
   };
-  /*
-  1. want to add click event for className="auth-form__password-eye-icon" that will toggle type of input
-        from pass to name also for login compo
-  2.       work on specs for figma
-  3. submit **/
+
   return (
     <div className="auth-form">
       <h2 className="auth-form__title">Sign up</h2>
@@ -38,7 +34,7 @@ const Register = ({ handleSignUp, handleEyeIcon }) => {
           <input
             type="text"
             name="password"
-            className="auth-form__input auth-form__input-password auth-form__password-holder-active "
+            className="auth-form__input auth-form__input-password auth-form__password-holder-active"
             placeholder="Password"
             value={password || ""}
             onChange={(e) => setPassword(e.target.value)}
@@ -53,13 +49,11 @@ const Register = ({ handleSignUp, handleEyeIcon }) => {
         <div className="auth-form__footer">
           <div className="auth-form__footer-wrapper">
             <button type="submit" className="auth-form__submit-button">
-              {" "}
               Sign up
             </button>
             <p className="auth-form__footer-text">
-              Already a member?{" "}
+              Already a member?
               <Link to="/signin" className="auth-form__footer-link">
-                {" "}
                 Log in here!
               </Link>
             </p>

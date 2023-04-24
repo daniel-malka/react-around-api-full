@@ -14,8 +14,8 @@ const {
 } = require('../middlewars/validation');
 const { createUser, login } = require('../controllers/users');
 
-router.post('/signup', /*validateUserBody,**/ createUser);
-router.post('/signin', /*validateAuthentication,**/ login);
+router.post('/signup', createUser);
+router.post('/signin', login);
 
 router.use(auth);
 

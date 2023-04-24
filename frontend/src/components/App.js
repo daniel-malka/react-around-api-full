@@ -25,10 +25,7 @@ function App() {
   const [isImgViewOpen, setIsImgViewOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const history = useHistory();
-  const [selectedCard, setSelectedCard] = React.useState({
-    name: "",
-    link: "",
-  });
+  const [selectedCard, setSelectedCard] = React.useState({});
   const [isCheckingToken, setIsCheckingToken] = useState(true);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [tooltipStatus, setTooltipStatus] = useState(false);
@@ -41,7 +38,11 @@ function App() {
     if (token) {
       api
         .getUserInfo(token)
+        .then((token) => {
+          console.log(token);
+        })
         .then((user) => {
+          console.log(user);
           setCurrentUser(user);
         })
         .catch((err) => console.log(err));
@@ -64,7 +65,7 @@ function App() {
           if (res._id) {
             setIsLoggedIn(true);
             setEmail(res.data.email);
-            history.push("/around-react");
+            history.push("/");
             api.setUserInfo({ email: res.data.email });
           }
         })
@@ -86,8 +87,6 @@ function App() {
         if (res.user._id) {
           history.push("/signin");
           setTooltipStatus(true);
-        } else {
-          setTooltipStatus(false);
         }
       })
       .catch((err) => {
@@ -95,7 +94,7 @@ function App() {
         setTooltipStatus(false);
       })
       .finally(() => {
-        setIsInfoTooltipOpen(true);
+        setIsInfoTooltipOpen(false);
       });
   };
 
@@ -108,7 +107,7 @@ function App() {
           setEmail(email);
           setToken(res.token);
           setCurrentUser(res);
-          history.push("/around-react");
+          history.push("/");
         }
       })
       .catch((err) => {
@@ -145,12 +144,13 @@ function App() {
   function handleCardLike(card) {
     // Check one more time if this card was already liked
     const isLiked = card.likes.some((user) => user._id === currentUser._id);
-
     if (isLiked) {
       api
         .dislikeCard(card._id, token)
         .then((likedCard) => {
-          const newCards = cards.data.map((card) => {
+          console.log(likedCard);
+          const newCards = cards.map((card) => {
+            console.log();
             return card._id === likedCard._id ? likedCard : card;
           });
           setCards(newCards);
@@ -162,7 +162,7 @@ function App() {
       api
         .likeCard(card._id, token)
         .then((likedCard) => {
-          const newCards = cards.data.map((card) => {
+          const newCards = cards.map((card) => {
             return card._id === likedCard._id ? likedCard : card;
           });
           setCards(newCards);
@@ -172,6 +172,7 @@ function App() {
         });
     }
   }
+
   function handleEditAvatarClick() {
     setIsEditAvatarOpen(true);
   }
@@ -233,22 +234,22 @@ function App() {
 
   function handleAddPlaceSubmit(card) {
     api
-      .addCard(
+      .createCard(
         {
           name: card.name,
           link: card.link,
+          owner: "63a306150372e6bd4aec944d",
         },
         token
       )
       .then((newCard) => {
-        api.getUserInfo(token).then((userInfo) => {
-          const updatedCard = { ...newCard, owner: userInfo._id };
-          setCards([updatedCard, ...cards]);
-          closeAllPopups();
-        });
+        console.log(newCard);
+        setCards([newCard, ...cards]);
+        closeAllPopups();
       })
       .catch((err) => console.log(err));
   }
+
   function handleUpdateUser({ name, about }) {
     api
       .setUserInfo({ name, about }, token)
@@ -265,9 +266,7 @@ function App() {
     eye.classList.toggle("auth-form__password-holder-active");
   };
 
-  return isCheckingToken ? (
-    <div />
-  ) : (
+  return (
     <div className="app">
       <CurrentUserContext.Provider value={currentUser}>
         <Header
@@ -275,38 +274,22 @@ function App() {
           email={email}
           handleSignout={handleLogout}
         />
-        <Switch>
-          <ProtectedRoute
-            path="/"
-            isLoggedIn={isLoggedIn}
-            isCheckingToken={isCheckingToken}
-          >
-            <Main
-              cards={cards}
-              onEditProfileClick={handleEditProfileClick}
-              onAddCardClick={handleAddCardClick}
-              onEditAvatarClick={handleEditAvatarClick}
-              onCardClick={handleCardClick}
-              onCardDelete={handleDeleteClick}
-              onCardLike={handleCardLike}
-            />
-          </ProtectedRoute>
 
-          <Route path="/signup">
-            <Register
-              handleSignUp={handleSignUp}
-              handleEyeIcon={handleEyeIcon}
-            />
-          </Route>
-
-          <Route path="/signin">
-            <Login handleLogin={handleLogin} handleEyeIcon={handleEyeIcon} />
-          </Route>
-
-          <Route>
-            {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signup" />}
-          </Route>
-        </Switch>
+        <ProtectedRoute
+          path="/"
+          isLoggedIn={isLoggedIn}
+          isCheckingToken={isCheckingToken}
+        >
+          <Main
+            cards={cards}
+            onEditProfileClick={handleEditProfileClick}
+            onAddCardClick={handleAddCardClick}
+            onEditAvatarClick={handleEditAvatarClick}
+            onCardClick={handleCardClick}
+            onCardDelete={handleDeleteClick}
+            onCardLike={handleCardLike}
+          />
+        </ProtectedRoute>
 
         <Footer />
 
@@ -325,6 +308,7 @@ function App() {
               isOpen={isAddCardOpen}
               onClose={closeAllPopups}
               onSubmit={handleAddPlaceSubmit}
+              owner={currentUser}
             />
             <EditAvatarPopup
               isOpen={isEditAvatarOpen}
@@ -343,7 +327,27 @@ function App() {
             />
           </>
         ) : (
-          ""
+          <div>
+            <Switch>
+              <Route path="/signup">
+                <Register
+                  handleSignUp={handleSignUp}
+                  handleEyeIcon={handleEyeIcon}
+                />
+              </Route>
+
+              <Route path="/signin">
+                <Login
+                  handleLogin={handleLogin}
+                  handleEyeIcon={handleEyeIcon}
+                />
+              </Route>
+
+              <Route>
+                {isLoggedIn ? <Redirect to="/" /> : <Redirect to="/signup" />}
+              </Route>
+            </Switch>
+          </div>
         )}
         {isLoggedIn ? (
           ""
