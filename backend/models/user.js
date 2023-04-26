@@ -23,8 +23,7 @@ const UserSchema = new Schema(
     },
     avatar: {
       type: String,
-      default:
-        'https://practicum-content.s3.us-west-1.amazonaws.com/resources/moved_avatar_1604080799.jpg',
+      default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
       validate: {
         validator: (value) => value.match(urlRegex),
         message: 'invalid url',

@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import password__eye from '../images/password-eye.svg';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import password__eye from "../images/password-eye.svg";
+
 const Login = ({ handleLogin, handleEyeIcon }) => {
   //use state object for email and password
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const getEmail = localStorage.getItem("email");
   //handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      email,
+      getEmail,
       password,
     };
 
-    handleLogin(userData.email, userData.password);
+    handleLogin({ userData });
   };
 
   return (
@@ -26,7 +27,6 @@ const Login = ({ handleLogin, handleEyeIcon }) => {
           name="email"
           className="auth-form__input"
           placeholder="Email"
-          value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
         <div className="auth-form__password-holder">
@@ -35,7 +35,7 @@ const Login = ({ handleLogin, handleEyeIcon }) => {
             name="password"
             className="auth-form__input auth-form__input-password auth-form__password-holder-active"
             placeholder="Password"
-            value={password || ''}
+            value={password || ""}
             onChange={(e) => setPassword(e.target.value)}
             required
           />
@@ -54,7 +54,7 @@ const Login = ({ handleLogin, handleEyeIcon }) => {
             <p className="auth-form__footer-text">
               Not a member yet?
               <Link to="/signup" className="auth-form__footer-link">
-                {' '}
+                {" "}
                 Sign up here!
               </Link>
             </p>

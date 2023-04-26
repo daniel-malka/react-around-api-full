@@ -1,3 +1,4 @@
+const validator = require('validator');
 const { Schema, model } = require('mongoose');
 const urlRegex = require('../utils/regex');
 

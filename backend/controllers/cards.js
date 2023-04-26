@@ -3,12 +3,12 @@ const CardSchema = require('../models/card');
 const getCards = (req, res) => {
   CardSchema.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(() => res.status(500).send({ message: 'An error occurred' }));
+    .catch((err) => res.status(500).send({ message: 'An error occurred' }));
 };
 
 const createCard = (req, res) => {
-  const { name, link, owner } = req.body;
-  CardSchema.create({ name, link, owner })
+  const { name, link } = req.body;
+  CardSchema.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
     .catch((err) => {
       if (err.name === 'ValidationError') {

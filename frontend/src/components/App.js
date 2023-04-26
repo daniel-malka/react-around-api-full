@@ -34,39 +34,53 @@ function App() {
   const [cards, setCards] = useState([]);
   const [token, setToken] = useState(localStorage.getItem("token"));
 
-  useEffect(() => {
-    if (token) {
-      api
-        .getUserInfo(token)
-        .then((token) => {
-          console.log(token);
-        })
-        .then((user) => {
-          console.log(user);
-          setCurrentUser(user);
-        })
-        .catch((err) => console.log(err));
+  const handleSignUp = (email, password) => {
+    signUp(email, password)
+      .then((res) => {
+        localStorage.setItem("email", res.user.email);
+        if (res.user._id) {
+          history.push("/signin");
+          setTooltipStatus(true);
+        }
+      })
+      .catch((err) => {
+        localStorage.removeItem("email");
+        console.log(err);
+        setTooltipStatus(false);
+      })
+      .finally(() => {
+        setIsInfoTooltipOpen(false);
+      });
+  };
 
-      api
-        .getCards(token)
-        .then((res) => {
-          setCards(res);
-        })
-        .catch((err) => console.log(err));
-    }
-  }, [token]);
-
+  const handleLogin = ({ userData }) => {
+    signIn({ email: userData.getEmail, password: userData.password })
+      .then((res) => {
+        setCurrentUser(res.user);
+        if (res.token) {
+          setIsLoggedIn(true);
+          localStorage.setItem("token", res.token);
+          setToken(res.token);
+          setEmail(userData.getEmail);
+          history.push("/");
+        }
+      })
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
+        // setTooltipStatus(false);
+      });
+  };
   //token check
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
+    if (localStorage.getItem("token")) {
       checkToken(token)
         .then((res) => {
-          if (res._id) {
-            setIsLoggedIn(true);
+          if (res.user._id) {
             setEmail(res.data.email);
             history.push("/");
-            api.setUserInfo({ email: res.data.email });
           }
         })
         .catch((err) => {
@@ -81,43 +95,28 @@ function App() {
     }
   }, []);
 
-  const handleSignUp = (email, password) => {
-    signUp(email, password)
-      .then((res) => {
-        if (res.user._id) {
-          history.push("/signin");
-          setTooltipStatus(true);
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-        setTooltipStatus(false);
-      })
-      .finally(() => {
-        setIsInfoTooltipOpen(false);
-      });
-  };
+  useEffect(() => {
+    if (isLoggedIn) {
+      if (token) {
+        api
+          .getUserInfo(currentUser._id, token)
+          .then((user) => {
+            if (user) {
+              setCurrentUser(user);
+            }
+          })
+          .catch((err) => console.log(err));
 
-  const handleLogin = (email, password) => {
-    signIn(email, password)
-      .then((res) => {
-        if (res.token) {
-          setIsLoggedIn(true);
-          localStorage.setItem("token", res.token);
-          setEmail(email);
-          setToken(res.token);
-          setCurrentUser(res);
-          history.push("/");
-        }
-      })
-      .catch((err) => {
-        console.log(err);
-      })
-      .finally(() => {
-        setIsInfoTooltipOpen(true);
-        setTooltipStatus(false);
-      });
-  };
+        api
+          .getCards(token)
+          .then((res) => {
+            console.log(res);
+            setCards(res);
+          })
+          .catch((err) => console.log(err));
+      }
+    }
+  }, [token]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -142,15 +141,12 @@ function App() {
   }, []);
 
   function handleCardLike(card) {
-    // Check one more time if this card was already liked
-    const isLiked = card.likes.some((user) => user._id === currentUser._id);
+    const isLiked = card.likes.some((user) => user.id === currentUser._id);
     if (isLiked) {
       api
         .dislikeCard(card._id, token)
         .then((likedCard) => {
-          console.log(likedCard);
           const newCards = cards.map((card) => {
-            console.log();
             return card._id === likedCard._id ? likedCard : card;
           });
           setCards(newCards);
@@ -223,8 +219,8 @@ function App() {
   function handleUpdateAvatar(avatar) {
     api
       .editAvatar(avatar, token)
-      .then((data) => {
-        setCurrentUser(data);
+      .then((res) => {
+        setCurrentUser(res);
         closeAllPopups();
       })
       .catch((err) => {
@@ -238,12 +234,10 @@ function App() {
         {
           name: card.name,
           link: card.link,
-          owner: "63a306150372e6bd4aec944d",
         },
         token
       )
       .then((newCard) => {
-        console.log(newCard);
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
@@ -253,14 +247,15 @@ function App() {
   function handleUpdateUser({ name, about }) {
     api
       .setUserInfo({ name, about }, token)
-      .then((data) => {
-        setCurrentUser(data);
+      .then((res) => {
+        console.log(res);
+        setCurrentUser({ name: name, about: about });
         closeAllPopups();
       })
       .catch((err) => console.log(err));
   }
 
-  const handleEyeIcon = (e) => {
+  const handleEyeIcon = () => {
     const eye = document.querySelector(".auth-form__input-password");
 
     eye.classList.toggle("auth-form__password-holder-active");
@@ -308,7 +303,6 @@ function App() {
               isOpen={isAddCardOpen}
               onClose={closeAllPopups}
               onSubmit={handleAddPlaceSubmit}
-              owner={currentUser}
             />
             <EditAvatarPopup
               isOpen={isEditAvatarOpen}

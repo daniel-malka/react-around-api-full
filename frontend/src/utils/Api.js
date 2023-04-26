@@ -7,14 +7,17 @@ export class Api {
 
   getCards(token) {
     return customFetch(`${this._baseUrl}/cards`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
     });
   }
-  getUserInfo(token) {
-    return customFetch(`${this._baseUrl}/users/me`, {
+
+  getUserInfo(id, token) {
+    return customFetch(`${this._baseUrl}/users/${id}`, {
+      method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
@@ -37,7 +40,7 @@ export class Api {
     });
   }
 
-  createCard({ name, link, owner }, token) {
+  createCard({ name, link }, token) {
     return customFetch(`${this._baseUrl}/cards`, {
       method: "POST",
       headers: {
@@ -45,9 +48,8 @@ export class Api {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        name: name,
-        link: link,
-        owner: owner,
+        name,
+        link,
       }),
     });
   }
@@ -61,7 +63,7 @@ export class Api {
       },
 
       body: JSON.stringify({
-        avatar: avatar,
+        avatar,
       }),
     });
   }
@@ -84,6 +86,7 @@ export class Api {
       },
     });
   }
+
   likeCard(id, token) {
     return customFetch(`${this._baseUrl}/${id}/likes`, {
       method: "PUT",

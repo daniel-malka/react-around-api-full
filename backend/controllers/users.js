@@ -164,31 +164,12 @@ const getUserId = (req, res) => {
       }
     });
 };
-const getCurrentUser = (req, res, next) => {
-  UserSchema.findById(req.user._id)
-    .orFail(() => {
-      const error = new Error('No user found with this Id');
-      error.status = 404;
-      throw error;
-    })
-    .then((user) => {
-      res.send(user);
-    })
-    .catch((err) => {
-      if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError(err.message));
-      } else {
-        next(err);
-      }
-    });
-};
 
 module.exports = {
   createUser,
   updateUserInfo,
   updateUserAvatar,
   getUsers,
-  getCurrentUser,
   getUserId,
   login,
 };
