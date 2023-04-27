@@ -1,6 +1,6 @@
-import { useState, useContext } from 'react';
+import { useState, useContext } from "react";
 
-import CurrentUserContext from '../contexts/CurrentUserContext';
+import CurrentUserContext from "../contexts/CurrentUserContext";
 
 const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
   function handleClick() {
@@ -16,15 +16,15 @@ const Card = ({ card, onCardClick, onCardLike, onCardDelete }) => {
   }
 
   const currentUser = useContext(CurrentUserContext);
-  const isOwn = card.owner._id === currentUser._id;
+  const isOwn = card.owner == currentUser._id;
 
-  const cardDeleteButtonClassName = `gallery__bin ${
-    isOwn ? '' : 'gallery__bin_disabled'
+  const cardDeleteButtonClassName = `${
+    isOwn ? "gallery__bin" : "gallery__bin_disabled"
   }`;
 
-  const isLikedByUser = card.likes.some((user) => user._id === currentUser._id);
+  const isLikedByUser = card.likes.some((user) => user == currentUser._id);
   const cardLikeButtonClassName = `like__button ${
-    isLikedByUser ? 'button_liked' : ''
+    isLikedByUser ? "button_liked" : ""
   }`;
 
   return (

@@ -15,8 +15,8 @@ export class Api {
     });
   }
 
-  getUserInfo(id, token) {
-    return customFetch(`${this._baseUrl}/users/${id}`, {
+  getUserInfo(token) {
+    return customFetch(`${this._baseUrl}/users/me`, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -61,7 +61,6 @@ export class Api {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
       },
-
       body: JSON.stringify({
         avatar,
       }),

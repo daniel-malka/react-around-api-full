@@ -38,7 +38,7 @@ function App() {
     signUp(email, password)
       .then((res) => {
         localStorage.setItem("email", res.user.email);
-        if (res.user._id) {
+        if (res._id) {
           history.push("/signin");
           setTooltipStatus(true);
         }
@@ -99,7 +99,7 @@ function App() {
     if (isLoggedIn) {
       if (token) {
         api
-          .getUserInfo(currentUser._id, token)
+          .getUserInfo(token)
           .then((user) => {
             if (user) {
               setCurrentUser(user);
@@ -141,7 +141,7 @@ function App() {
   }, []);
 
   function handleCardLike(card) {
-    const isLiked = card.likes.some((user) => user.id === currentUser._id);
+    const isLiked = card.likes.some((user) => user === currentUser._id);
     if (isLiked) {
       api
         .dislikeCard(card._id, token)
@@ -220,6 +220,7 @@ function App() {
     api
       .editAvatar(avatar, token)
       .then((res) => {
+        console.log(res);
         setCurrentUser(res);
         closeAllPopups();
       })
@@ -229,15 +230,11 @@ function App() {
   }
 
   function handleAddPlaceSubmit(card) {
+    console.log(card);
     api
-      .createCard(
-        {
-          name: card.name,
-          link: card.link,
-        },
-        token
-      )
+      .createCard(card, token)
       .then((newCard) => {
+        console.log(newCard);
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
@@ -249,7 +246,7 @@ function App() {
       .setUserInfo({ name, about }, token)
       .then((res) => {
         console.log(res);
-        setCurrentUser({ name: name, about: about });
+        setCurrentUser(res);
         closeAllPopups();
       })
       .catch((err) => console.log(err));
@@ -269,7 +266,6 @@ function App() {
           email={email}
           handleSignout={handleLogout}
         />
-
         <ProtectedRoute
           path="/"
           isLoggedIn={isLoggedIn}
@@ -285,9 +281,6 @@ function App() {
             onCardLike={handleCardLike}
           />
         </ProtectedRoute>
-
-        <Footer />
-
         {isLoggedIn ? (
           <>
             <EditProfilePopup
@@ -351,7 +344,8 @@ function App() {
             onClose={closeAllPopups}
             bool={tooltipStatus}
           />
-        )}
+        )}{" "}
+        <Footer />
       </CurrentUserContext.Provider>
     </div>
   );

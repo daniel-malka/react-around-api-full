@@ -9,6 +9,7 @@ const { PORT = 3001 } = process.env;
 const path = require('path'); // Add this line
 
 mongoose.connect('mongodb://localhost:27017/mydb');
+app.use(requestLogger);
 
 app.use(cors());
 app.options('*', cors());
@@ -16,7 +17,6 @@ app.options('*', cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Serve static assets
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
 // Serve index.html for any unknown paths
@@ -36,5 +36,4 @@ app.listen(PORT, () => {
   console.log(`listening to port ${PORT}`);
 });
 
-app.use(requestLogger);
 app.use(errorLogger);

@@ -127,7 +127,7 @@ const updateUserInfo = (req, res) => {
 };
 
 const updateUserAvatar = (req, res) => {
-  const { avatar } = req.body;
+  const { name, about, avatar } = req.body;
 
   if (!avatar) {
     return res.status(400).send({ message: `avatar cant be empty` });
@@ -165,11 +165,30 @@ const getUserId = (req, res) => {
     });
 };
 
+const getCurrentUser = (req, res, next) => {
+  UserSchema.findById(req.user._id)
+    .orFail(() => {
+      const error = new Error('No user found with this Id');
+      error.status = 404;
+      throw error;
+    })
+    .then((user) => {
+      res.send(user);
+    })
+    .catch((err) => {
+      if (err.name === 'CastError' || err.name === 'ValidationError') {
+        next(new BadRequestError(err.message));
+      } else {
+        next(err);
+      }
+    });
+};
 module.exports = {
   createUser,
   updateUserInfo,
   updateUserAvatar,
   getUsers,
+  getCurrentUser,
   getUserId,
   login,
 };
