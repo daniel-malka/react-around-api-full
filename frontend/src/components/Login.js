@@ -6,12 +6,12 @@ const Login = ({ handleLogin, handleEyeIcon }) => {
   //use state object for email and password
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  // const getEmail = localStorage.getItem("email");
+  const getEmail = localStorage.getItem("email");
   //handle submit
   const handleSubmit = (e) => {
     e.preventDefault();
     const userData = {
-      email,
+      getEmail,
       password,
     };
 

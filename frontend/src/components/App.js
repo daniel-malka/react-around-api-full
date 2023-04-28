@@ -63,14 +63,14 @@ function App() {
           setToken(res.token);
           setEmail(userData.getEmail);
           history.push("/");
+          setIsInfoTooltipOpen(true);
         }
       })
       .catch((err) => {
         console.log(err);
       })
       .finally(() => {
-        setIsInfoTooltipOpen(true);
-        // setTooltipStatus(false);
+
       });
   };
   //token check

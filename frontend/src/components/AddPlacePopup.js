@@ -51,7 +51,7 @@ function AddPlacePopup({ isOpen, onSubmit, onClose }) {
       </div>
       <div className="fieldset__container">
         <input
-          type="link"
+          type="url"
           id="link"
           name="link"
           onChange={handleLinkChange}
