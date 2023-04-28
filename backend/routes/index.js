@@ -19,8 +19,8 @@ router.post('/signin', login);
 
 router.use(auth);
 
-router.use('/', userRouter);
-router.use('/', cardRouter);
+router.use('/users', userRouter);
+router.use('/cards', cardRouter);
 router.use('*', nonRoute);
 
 module.exports = { router };

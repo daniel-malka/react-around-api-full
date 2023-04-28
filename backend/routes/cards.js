@@ -11,8 +11,8 @@ const {
   dislikeCard,
 } = require('../controllers/cards');
 
-router.get('/cards', getCards);
-router.post('/cards', createCard);
+router.get('/', getCards);
+router.post('/', createCard);
 router.delete('/:id', deleteCard);
 router.put('/:id/likes', likeCard);
 router.delete('/:id/likes', dislikeCard);

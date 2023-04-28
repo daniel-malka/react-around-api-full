@@ -12,10 +12,10 @@ const {
   getUserId,
 } = require('../controllers/users');
 
-router.get('/users', getUsers);
+router.get('/', getUsers);
 // router.get('/users/me', getCurrentUser);
-router.get('/users/me', getCurrentUser);
-router.patch('/users/me', updateUserInfo);
-router.patch('/users/me/avatar', updateUserAvatar);
+router.get('/me', getCurrentUser);
+router.patch('/me', updateUserInfo);
+router.patch('/me/avatar', updateUserAvatar);
 
 module.exports = { userRouter: router };

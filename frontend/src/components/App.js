@@ -38,7 +38,7 @@ function App() {
     signUp(email, password)
       .then((res) => {
         localStorage.setItem("email", res.user.email);
-        if (res._id) {
+        if (res.user._id) {
           history.push("/signin");
           setTooltipStatus(true);
         }
@@ -110,7 +110,6 @@ function App() {
         api
           .getCards(token)
           .then((res) => {
-            console.log(res);
             setCards(res);
           })
           .catch((err) => console.log(err));
@@ -220,7 +219,6 @@ function App() {
     api
       .editAvatar(avatar, token)
       .then((res) => {
-        console.log(res);
         setCurrentUser(res);
         closeAllPopups();
       })
@@ -230,11 +228,9 @@ function App() {
   }
 
   function handleAddPlaceSubmit(card) {
-    console.log(card);
     api
       .createCard(card, token)
       .then((newCard) => {
-        console.log(newCard);
         setCards([newCard, ...cards]);
         closeAllPopups();
       })
@@ -245,7 +241,6 @@ function App() {
     api
       .setUserInfo({ name, about }, token)
       .then((res) => {
-        console.log(res);
         setCurrentUser(res);
         closeAllPopups();
       })

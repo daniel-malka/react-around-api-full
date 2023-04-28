@@ -13,24 +13,27 @@ app.use(requestLogger);
 
 app.use(cors());
 app.options('*', cors());
-
+app.use((req, res, next) => {
+  console.log(req);
+  next();
+});
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(express.static(path.join(__dirname, 'client', 'build')));
 
+// app.get('/crash-test', () => {
+//   setTimeout(() => {
+//     throw new Error('Server will crash now');
+//   }, 1000);
+// });
+
+app.use(router);
+
 // Serve index.html for any unknown paths
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, 'client', 'build', 'index.html'));
 });
-
-app.get('/crash-test', () => {
-  setTimeout(() => {
-    throw new Error('Server will crash now');
-  }, 0);
-});
-
-app.use(router);
 
 app.listen(PORT, () => {
   console.log(`listening to port ${PORT}`);

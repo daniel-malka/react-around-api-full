@@ -67,7 +67,7 @@ export class Api {
     });
   }
   deleteCard(cardId, token) {
-    return customFetch(`${this._baseUrl}/${cardId}`, {
+    return customFetch(`${this._baseUrl}/cards/${cardId}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -77,7 +77,7 @@ export class Api {
   }
 
   dislikeCard(id, token) {
-    return customFetch(`${this._baseUrl}/${id}/likes`, {
+    return customFetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -87,7 +87,7 @@ export class Api {
   }
 
   likeCard(id, token) {
-    return customFetch(`${this._baseUrl}/${id}/likes`, {
+    return customFetch(`${this._baseUrl}/cards/${id}/likes`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
