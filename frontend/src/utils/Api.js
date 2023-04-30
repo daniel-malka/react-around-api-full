@@ -98,6 +98,6 @@ export class Api {
 }
 
 const api = new Api({
-  baseUrl: BASE_URL,
+  baseUrl: `https://${BASE_URL2}`,
 });
 export default api;

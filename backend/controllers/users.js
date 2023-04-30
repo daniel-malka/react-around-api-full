@@ -127,7 +127,7 @@ const updateUserInfo = (req, res) => {
 };
 
 const updateUserAvatar = (req, res) => {
-  const { name, about, avatar } = req.body;
+  const { avatar } = req.body;
 
   if (!avatar) {
     return res.status(400).send({ message: `avatar cant be empty` });
@@ -145,25 +145,25 @@ const getUsers = (req, res) => {
         .send({ message: 'An error has occured.. please try again later' })
     );
 };
-const getUserId = (req, res) => {
-  const { id } = req.params;
-  UserSchema.findById(id)
-    .orFail(() => {
-      const error = new Error('No user found with this Id');
-      error.status = 404;
-      throw error;
-    })
-    .then((user) => res.send(user))
-    .catch((err) => {
-      if (err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
-      } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
-      } else {
-        res.status(500).send({ message: 'An error has occured' });
-      }
-    });
-};
+// const getUserId = (req, res) => {
+//   const { id } = req.params;
+//   UserSchema.findById(id)
+//     .orFail(() => {
+//       const error = new Error('No user found with this Id');
+//       error.status = 404;
+//       throw error;
+//     })
+//     .then((user) => res.send(user))
+//     .catch((err) => {
+//       if (err.name === 'CastError') {
+//         res.status(400).send({ message: err.message });
+//       } else if (err.statusCode === 404) {
+//         res.status(404).send({ message: err.message });
+//       } else {
+//         res.status(500).send({ message: 'An error has occured' });
+//       }
+//     });
+// };
 
 const getCurrentUser = (req, res, next) => {
   UserSchema.findById(req.user._id)
@@ -189,6 +189,6 @@ module.exports = {
   updateUserAvatar,
   getUsers,
   getCurrentUser,
-  getUserId,
+  // getUserId,
   login,
 };

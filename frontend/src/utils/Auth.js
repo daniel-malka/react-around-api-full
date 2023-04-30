@@ -1,7 +1,7 @@
-import { BASE_URL, customFetch } from "./constants-and-rep-code";
+import { BASE_URL, BASE_URL2, customFetch } from "./constants-and-rep-code";
 
 export const signUp = (email, password) => {
-  return customFetch(`${BASE_URL}/signup`, {
+  return customFetch(`https://${BASE_URL2}/signup`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -12,7 +12,7 @@ export const signUp = (email, password) => {
 };
 
 export const signIn = ({ email, password }) => {
-  return customFetch(`${BASE_URL}/signin`, {
+  return customFetch(`https://${BASE_URL2}/signin`, {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -23,7 +23,7 @@ export const signIn = ({ email, password }) => {
 };
 
 export const checkToken = (token) => {
-  return customFetch(`${BASE_URL}/users/me`, {
+  return customFetch(`https://${BASE_URL2}/users/me`, {
     method: "GET",
     headers: {
       Accept: "application/json",
