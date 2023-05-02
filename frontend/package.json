@@ -1,4 +1,5 @@
 {
+  "homepage": "around-dan.chickenkiller.com",
   "name": "around-react",
   "version": "0.1.0",
   "private": true,
@@ -18,8 +19,7 @@
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
-    "deploy": "npm run build && scp -r ./build/* danielmalka999@34.168.210.20:/home/danielmalka999/full-cloud/react-around-api-full/frontend"
+    "deploy": "npm run build && scp -r ./build/* danielmalka999@34.168.210.20:/home/danielmalka999/react-around-api-full/frontend"
   },
   "eslintConfig": {
     "extends": [
