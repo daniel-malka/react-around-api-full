@@ -16,6 +16,6 @@ router.get('/', getUsers);
 // router.get('/me', validateObjectId, getUserId);
 router.get('/me', validateObjectId, getCurrentUser);
 router.patch('/me', validateProfile, updateUserInfo);
-router.patch('/me/avatar', validateAvatar, updateUserAvatar);
+router.patch('/me/avatar', /* validateAvatar, */ updateUserAvatar);
 
 module.exports = { userRouter: router };
