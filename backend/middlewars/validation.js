@@ -77,9 +77,11 @@ const validateProfile = celebrate({
 });
 
 const validateAvatar = celebrate({
-  avatar: Joi.string()
-    .custom(validateURL)
-    .message('Invalid URL for avatar link'),
+  body: Joi.object().keys({
+    avatar: Joi.string()
+      .custom(validateURL)
+      .message('Invalid URL for avatar link'),
+  }),
 });
 
 const validateCardBody = celebrate({
