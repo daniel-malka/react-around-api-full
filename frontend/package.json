@@ -19,7 +19,7 @@
     "build": "react-scripts build",
     "test": "jest",
     "eject": "react-scripts eject",
-    "deploy": "npm run build && scp -r ./build/* danielmalka999@34.168.210.20:/home/danielmalka999/frontend"
+    "deploy": "npm run build && scp -r ./build/* danielmalka999@around-dan.chickenkiller.com:/home/danielmalka999/frontend"
   },
   "eslintConfig": {
     "extends": [
