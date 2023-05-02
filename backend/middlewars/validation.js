@@ -4,7 +4,7 @@ const { ObjectId } = require('mongoose').Types;
 
 const validateObjectId = celebrate({
   params: Joi.object().keys({
-    id: Joi.string()
+    _id: Joi.string()
       .required()
       .custom((value, helpers) => {
         if (ObjectId.isValid(value)) {

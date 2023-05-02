@@ -48,8 +48,8 @@ export class Api {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        name,
-        link,
+        name: name,
+        link: link,
       }),
     });
   }
@@ -62,7 +62,7 @@ export class Api {
         Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({
-        avatar,
+        avatar: avatar,
       }),
     });
   }
@@ -98,6 +98,6 @@ export class Api {
 }
 
 const api = new Api({
-  baseUrl: `https://${BASE_URL2}`,
+  baseUrl: `${BASE_URL2}`,
 });
 export default api;

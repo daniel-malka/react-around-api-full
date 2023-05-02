@@ -12,8 +12,8 @@ const {
 } = require('../controllers/cards');
 
 router.get('/', getCards);
-router.post('/', validateCardBody, createCard);
+router.post('/', /**  validateCardBody, */ createCard);
 router.delete('/:id', deleteCard);
-router.put('/:id/likes', validateObjectId, likeCard);
-router.delete('/:id/likes', validateObjectId, dislikeCard);
+router.put('/:id/likes', /** validateObjectId,*/ likeCard);
+router.delete('/:id/likes', /** validateObjectId, */ dislikeCard);
 module.exports = { cardRouter: router };

@@ -19,8 +19,7 @@
     "test": "jest",
     "eject": "react-scripts eject",
     "predeploy": "npm run build",
-    "deploy": "gh-pages -d build",
-    "deploy2": "npm run build && scp -r ./build/* danielmalka999@around-dan.chickenkiller.com:/home/danielmalka999/frontend"
+    "deploy": "npm run build && scp -r ./build/* danielmalka999@around-dan.chickenkiller.com:/home/danielmalka999/full-cloud/react-around-api-full/frontend"
   },
   "eslintConfig": {
     "extends": [
@@ -43,6 +42,5 @@
   "devDependencies": {
     "gh-pages": "^4.0.0",
     "jest": "^27.5.1"
-  },
-  "homepage": "https://around-dan.chickenkiller.com/"
+  }
 }
