@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import password__eye from "../images/password-eye.svg";
 
@@ -41,6 +41,7 @@ const Register = ({ handleSignUp, handleEyeIcon }) => {
             required
           />
           <img
+            alt="see coverd password eye icon"
             className="auth-form__password-eye-icon"
             src={password__eye}
             onClick={handleEyeIcon}

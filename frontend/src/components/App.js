@@ -69,31 +69,31 @@ function App() {
       .catch((err) => {
         console.log(err);
       })
-      .finally(() => {
-
-      });
+      .finally(() => {});
   };
   //token check
   useEffect(() => {
-    if (localStorage.getItem("token")) {
-      checkToken(token)
-        .then((res) => {
-          if (res.user._id) {
-            setEmail(res.data.email);
-            history.push("/");
-          }
-        })
-        .catch((err) => {
-          console.log(err);
-          history.push("/signin");
-        })
-        .finally(() => {
-          setIsCheckingToken(false);
-        });
-    } else {
-      setIsCheckingToken(false);
+    if (isLoggedIn) {
+      if (localStorage.getItem("token")) {
+        checkToken(token)
+          .then((res) => {
+            if (res.user._id) {
+              setEmail(res.data.email);
+              history.push("/");
+            }
+          })
+          .catch((err) => {
+            console.log(err);
+            history.push("/signin");
+          })
+          .finally(() => {
+            setIsCheckingToken(false);
+          });
+      } else {
+        setIsCheckingToken(false);
+      }
     }
-  }, []);
+  }, [token, history]);
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -115,7 +115,7 @@ function App() {
           .catch((err) => console.log(err));
       }
     }
-  }, [token]);
+  }, [isLoggedIn, token]);
 
   const handleLogout = () => {
     setIsLoggedIn(false);

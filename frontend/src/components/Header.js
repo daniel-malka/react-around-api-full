@@ -1,9 +1,9 @@
-import { useEffect, useState } from 'react';
-import logo from '../images/top__logo.svg';
-import hamburger_icon from '../images/hamburger_icon.svg';
-import closeX from '../images/close-X.svg';
-import MobileAdditionMenu from './MoblieAdditionMenu';
-import { Link, useLocation } from 'react-router-dom';
+import { useState } from "react";
+import logo from "../images/top__logo.svg";
+import hamburger_icon from "../images/hamburger_icon.svg";
+import closeX from "../images/close-X.svg";
+import MobileAdditionMenu from "./MoblieAdditionMenu";
+import { Link, useLocation } from "react-router-dom";
 
 const Header = ({ isLoggedIn, email, handleSignout }) => {
   const [isMobileHeaderOpen, setIsMobileHeaderOpen] = useState(false);
@@ -21,7 +21,7 @@ const Header = ({ isLoggedIn, email, handleSignout }) => {
       {isLoggedIn && isMobileHeaderOpen ? (
         <MobileAdditionMenu email={email} handleSignout={handleSignout} />
       ) : (
-        ''
+        ""
       )}
 
       <header className="header">
@@ -34,12 +34,12 @@ const Header = ({ isLoggedIn, email, handleSignout }) => {
             src={isMobileHeaderOpen ? closeX : hamburger_icon}
             alt={
               isMobileHeaderOpen
-                ? 'mobile menu close button'
-                : 'open menu button'
+                ? "mobile menu close button"
+                : "open menu button"
             }
           />
         ) : (
-          ''
+          ""
         )}
 
         {isLoggedIn ? (
@@ -53,9 +53,9 @@ const Header = ({ isLoggedIn, email, handleSignout }) => {
           <div className="header__container ">
             <Link
               className="header__redirect-text"
-              to={location.pathname === '/signin' ? 'signup' : 'signin'}
+              to={location.pathname === "/signin" ? "signup" : "signin"}
             >
-              {location.pathname === '/signin' ? 'signup' : 'signin'}
+              {location.pathname === "/signin" ? "signup" : "signin"}
             </Link>
           </div>
         )}

@@ -41,6 +41,7 @@ const Login = ({ handleLogin, handleEyeIcon }) => {
           />
           <img
             className="auth-form__password-eye-icon"
+            alt="see coverd password eye icon"
             onClick={handleEyeIcon}
             src={password__eye}
           />
