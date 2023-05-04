@@ -1,9 +1,9 @@
 const CardSchema = require('../models/card');
-
+const { error } = require('../errors/Error');
 const getCards = (req, res) => {
   CardSchema.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch((err) => res.status(500).send({ message: 'An error occurred' }));
+    .catch(new error(500, 'An error occurred'));
 };
 
 const createCard = (req, res) => {
@@ -13,13 +13,16 @@ const createCard = (req, res) => {
     .catch((err) => {
       if (err.name === 'ValidationError') {
         const { errors } = err;
-        res.status(400).send({
-          message: `${Object.values(errors)
-            .map((error) => error.message)
-            .join(', ')}`,
-        });
+        next(
+          new error(
+            400,
+            `${Object.values(errors)
+              .map((error) => error.message)
+              .join(', ')}`
+          )
+        );
       } else {
-        res.status(500).send({ message: 'An error occured' });
+        throw new error(500, 'An error occured');
       }
     });
 };
@@ -28,18 +31,16 @@ const deleteCard = (req, res) => {
   const { id } = req.params;
   CardSchema.findById(id)
     .orFail(() => {
-      const error = new Error('No card was found with this id');
-      error.status = 404;
-      throw error;
+      throw new error(404, 'No card was found with this id');
     })
     .then((card) => CardSchema.deleteOne(card).then(() => res.send(card)))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: 'Invalid card id' });
+        next(new error(400, 'Invalid card id'));
       } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
+        next(new error(404, err.message));
       } else {
-        res.status(500).send({ message: 'an error has occured' });
+        next(new error(500, 'an error has occured'));
       }
     });
 };
@@ -52,18 +53,16 @@ const updateLike = (req, res, operator) => {
     { new: true }
   )
     .orFail(() => {
-      const error = new Error(`no card found with this id (${id})`);
-      error.status = 404;
-      throw error;
+      throw new error(404, `no card found with this id (${id})`);
     })
     .then((card) => {
       res.send(card);
     })
     .catch((err) => {
       if (err.statusCode === 404) {
-        res.status(400).send({ message: 'invalid card id' });
+        next(new error(400, 'invalid card id'));
       } else if (err.statusCode === 500) {
-        res.status(500).send({ message: 'somthing went wrong' });
+        next(new error(500, 'somthing went wrong'));
       }
     });
 };

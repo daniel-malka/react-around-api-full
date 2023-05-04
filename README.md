@@ -6,7 +6,9 @@ Welcome to the React Around API Full repository! This project is a full-stack we
 
 The app is running on VM on "https://around-dan.chickenkiller.com"
 
-To run this project locally, you need to have Node.js and MongoDB installed on your machine.
+The server is running on VM on "https://api.around-dan.chickenkiller.com"
+
+To run this project locally, you need to have Node.js and MongoDB and Git installed on your machine.
 
 1. Clone this repository to your local machine.
 2. Navigate to the root directory of the project in your terminal.
@@ -43,13 +45,15 @@ This project is built using the following technologies:
 - bcrypt
 - jsonwebtoken
 - cors
+
   The server is using the following technologies:
 
 - Google Cloud
 - ssh keygen
 - Nginx
+- pm2
 - certbot
-- logs | Celabrate | Joi | Winston
+- logs | Winston | Celabrate | Joi
 
 ## Contributing
 

@@ -1,7 +1,7 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserSchema = require('../models/user');
-
+const { error } = require('../errors/Error');
 const { JWT_SECRET } = require('../utils/config');
 
 function login(req, res, next) {
@@ -15,56 +15,16 @@ function login(req, res, next) {
       res.send({ user, token });
     })
     .catch(() => {
-      next(new Error(`Incorrect email or password`));
+      next(new error(401, `Incorrect email or password`));
     });
 }
-// const createUser = (req, res, next) => {
-//   const { name, about, avatar, email, password } = req.body;
-//   UserSchema.findOne({ email })
-//     .then((user) => {
-//       if (user) {
-//         // user already exists
 
-//         const error = new Error('a user with this email already exists');
-//         error.status = 409;
-
-//         throw error;
-//       }
-//       // user does not exist, so spit out a hashed password
-//       return bcrypt.hash(password, 11);
-//     })
-//     .then((hash) =>
-//       UserSchema.create({ name, about, avatar, email, password: hash })
-//         .then((user) => {
-//           // Return the user object with password field excluded
-//           const { password, ...userWithoutPassword } = user.toObject();
-//           res.status(201).send({ user: userWithoutPassword });
-//         })
-//         .catch((err) => {
-//           if (err.name === 'Validation Error') {
-//             next(
-//               new Error(
-//                 `${Object.values(err.errors)
-//                   .map((error) => error.message)
-//                   .join(', ')}`
-//               )
-//             );
-//           } else {
-//             next(err);
-//           }
-//         })
-//     );
-// };
 const createUser = (req, res, next) => {
   const { name, about, avatar, email, password } = req.body;
   UserSchema.findOne({ email })
     .then((user) => {
       if (user) {
-        // user already exists
-
-        const error = new Error('a user with this email already exists');
-        error.status = 409;
-        throw error;
+        throw new error(409, 'a user with this email already exists');
       }
       // user does not exist, so spit out a hashed password
       return bcrypt.hash(password, 11);
@@ -75,18 +35,21 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'Validation Error') {
             next(
-              new Error(
+              new error(
+                400,
                 `${Object.values(err.errors)
                   .map((error) => error.message)
                   .join(', ')}`
               )
             );
           } else {
-            next(err);
+            next(new error(err.status, err.message));
           }
         })
-    );
+    )
+    .catch(new error(err.status, err.message));
 };
+
 const updateUserData = (req, res) => {
   const { _id } = req.user;
   const { name, about, avatar } = req.body;
@@ -98,20 +61,16 @@ const updateUserData = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail(() => {
-      const error = new Error(`User with this id (${_id}) was not found`);
-      error.status = 404;
-      throw error;
+      throw new error(404, `User with this id (${_id}) was not found`);
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        res
-          .status(400)
-          .send({ message: `the user id (${_id}) is not correct` });
+        throw new error(400, `the user id (${_id}) is not correct`);
       } else if (res.status === 404) {
-        res.status(404).send({ message: err.message });
+        throw new error(404, err.message);
       } else {
-        res.status(500).send({ message: 'somthing went wrong' });
+        throw new error(500, 'somthing went wrong');
       }
     });
 };
@@ -120,7 +79,7 @@ const updateUserInfo = (req, res) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
-    return res.status(400).send({ message: 'name and about cant be empty' });
+    throw new error(400, 'name and about cant be empty');
   }
 
   updateUserData(req, res);
@@ -130,7 +89,7 @@ const updateUserAvatar = (req, res) => {
   const { avatar } = req.body;
 
   if (!avatar) {
-    return res.status(400).send({ message: `avatar cant be empty` });
+    throw new error(400, `avatar cant be empty`);
   }
 
   updateUserData(req, res);
@@ -139,28 +98,24 @@ const updateUserAvatar = (req, res) => {
 const getUsers = (req, res) => {
   UserSchema.find({})
     .then((users) => res.status(200).send({ data: users }))
-    .catch(() =>
-      res
-        .status(500)
-        .send({ message: 'An error has occured.. please try again later' })
+    .catch(
+      () => new error(500, 'An error has occured.. please try again later')
     );
 };
 const getUserId = (req, res) => {
   const { _id } = req.params;
   UserSchema.findById(_id)
     .orFail(() => {
-      const error = new Error('No user found with this Id');
-      error.status = 404;
-      throw error;
+      throw new Error(404, 'No user found with this Id');
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError') {
-        res.status(400).send({ message: err.message });
+        throw new error(400, err.message);
       } else if (err.statusCode === 404) {
-        res.status(404).send({ message: err.message });
+        throw new error(404, err.message);
       } else {
-        res.status(500).send({ message: 'An error has occured' });
+        throw new error(500, 'An error has occured');
       }
     });
 };
@@ -168,18 +123,16 @@ const getUserId = (req, res) => {
 const getCurrentUser = (req, res, next) => {
   UserSchema.findById(req.user._id)
     .orFail(() => {
-      const error = new Error('No user found with this Id');
-      error.status = 404;
-      throw error;
+      throw new error(404, 'No user found with this Id');
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new BadRequestError(err.message));
+        next(new error(400, err.message));
       } else {
-        next(err);
+        next(new error(err.status, err.message));
       }
     });
 };

@@ -8,14 +8,12 @@ const { urlRegex } = require('../utils/regex');
 const UserSchema = new Schema(
   {
     name: {
-      required: true,
       type: String,
       minlength: 2,
       maxlength: 30,
       default: 'Jacques Cousteau',
     },
     about: {
-      required: true,
       type: String,
       minlength: 2,
       maxlength: 30,
