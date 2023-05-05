@@ -2,20 +2,22 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserSchema = require('../models/user');
 const { error } = require('../errors/Error');
-const { JWT_SECRET } = require('../utils/config');
+const { JWT_SECRET } = process.env;
 
 function login(req, res, next) {
   const { email, password } = req.body;
 
   return UserSchema.findUserByCredentials(email, password)
     .then((user) => {
+      //   res.send({ 'user id': user._id, JWT_SECRET });
+      // });
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.send({ user, token });
     })
     .catch(() => {
-      next(new error(401, `Incorrect email or password`));
+      next(new error(401, 'incorrect email or password'));
     });
 }
 
@@ -24,12 +26,12 @@ const createUser = (req, res, next) => {
   UserSchema.findOne({ email })
     .then((user) => {
       if (user) {
-        throw new error(409, 'a user with this email already exists');
+        next(new error(409, 'a user with this email already exists'));
       }
       // user does not exist, so spit out a hashed password
       return bcrypt.hash(password, 11);
     })
-    .then((hash) =>
+    .then((hash) => {
       UserSchema.create({ name, about, avatar, email, password: hash })
         .then((user) => res.status(201).send({ user }))
         .catch((err) => {
@@ -43,11 +45,10 @@ const createUser = (req, res, next) => {
               )
             );
           } else {
-            next(new error(err.status, err.message));
+            next(new error(500, 'internal server error'));
           }
-        })
-    )
-    .catch(new error(err.status, err.message));
+        });
+    });
 };
 
 const updateUserData = (req, res) => {

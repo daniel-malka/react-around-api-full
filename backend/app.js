@@ -6,9 +6,9 @@ const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const { router } = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewars/logger');
-const { PORT = 3001 } = process.env;
+const { PORT, MONGO_URL } = process.env;
 
-mongoose.connect('mongodb://localhost:27017/mydb');
+mongoose.connect(MONGO_URL);
 
 app.use(requestLogger);
 

@@ -56,6 +56,7 @@ function App() {
   const handleLogin = ({ userData }) => {
     signIn({ email: userData.getEmail, password: userData.password })
       .then((res) => {
+        console.log("res", res);
         setCurrentUser(res.user);
         if (res.token) {
           setIsLoggedIn(true);
