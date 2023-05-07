@@ -1,5 +1,5 @@
 const CardSchema = require('../models/card');
-const { error } = require('../errors/Error');
+const error = require('../errors/Error');
 
 const getCards = (req, res) => {
   CardSchema.find({})
@@ -23,7 +23,7 @@ const createCard = (req, res) => {
           )
         );
       } else {
-        throw new error(500, 'An error occured');
+        next(new error(500, 'An error occured'));
       }
     });
 };
@@ -34,14 +34,21 @@ const deleteCard = (req, res) => {
     .orFail(() => {
       throw new error(404, 'No card was found with this id');
     })
-    .then((card) => CardSchema.deleteOne(card).then(() => res.send(card)))
+    .then((card) => {
+      if (card.owner !== _id) {
+        return next(
+          new error(403, `you must be the card owner  in order to delete it`)
+        );
+      }
+      CardSchema.deleteOne(card).then(() => res.send(card));
+    })
     .catch((err) => {
       if (err.name === 'CastError') {
         next(new error(400, 'invalid card id'));
       } else if (err.statusCode === 404) {
         next(new error(404, err.message));
       } else {
-        next(new error(500, 'an error has occured'));
+        next(err);
       }
     });
 };
@@ -62,8 +69,8 @@ const updateLike = (req, res, operator) => {
     .catch((err) => {
       if (err.statusCode === 400) {
         next(new error(400, 'invalid card id'));
-      } else if (err.statusCode === 500) {
-        next(new error(500, 'somthing went wrong'));
+      } else {
+        next(err);
       }
     });
 };
