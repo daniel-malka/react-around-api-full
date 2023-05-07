@@ -2,7 +2,7 @@ const express = require('express');
 require('dotenv').config({ path: './.env' });
 const cors = require('cors');
 const app = express();
-const { errors } = require('celebrate');
+const errors = require('celebrate');
 const mongoose = require('mongoose');
 const { router } = require('./routes');
 const { requestLogger, errorLogger } = require('./middlewars/logger');
