@@ -1,13 +1,13 @@
 const CardSchema = require('../models/card');
 const error = require('../errors/Error');
 
-const getCards = (req, res) => {
+const getCards = (req, res, next) => {
   CardSchema.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(new error(500, 'An error occurred'));
+    .catch(() => next(new error(500, 'An error occurred')));
 };
 
-const createCard = (req, res) => {
+const createCard = (req, res, next) => {
   const { name, link } = req.body;
   CardSchema.create({ name, link, owner: req.user._id })
     .then((card) => res.status(200).send(card))
@@ -28,14 +28,14 @@ const createCard = (req, res) => {
     });
 };
 
-const deleteCard = (req, res) => {
+const deleteCard = (req, res, next) => {
   const { _id } = req.params;
   CardSchema.findById(_id)
     .orFail(() => {
       throw new error(404, 'No card was found with this id');
     })
     .then((card) => {
-      if (card.owner !== _id) {
+      if (!card.owner.equals(req.user._id)) {
         return next(
           new error(403, `you must be the card owner  in order to delete it`)
         );

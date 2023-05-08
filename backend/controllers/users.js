@@ -107,7 +107,7 @@ const getUserId = (req, res) => {
   const { _id } = req.params;
   UserSchema.findById(_id)
     .orFail(() => {
-      next(new Error(404, 'No user found with this Id'));
+      next(new error(404, 'No user found with this Id'));
     })
     .then((user) => res.send(user))
     .catch((err) => {
