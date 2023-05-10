@@ -1,9 +1,10 @@
+const isValideURL = require('valid-url');
 const mongoose = require('mongoose');
 const validator = require('validator');
 const bcrypt = require('bcryptjs');
-const { Schema, model } = mongoose;
+const ErrorHandler = require('../errors/Error');
 
-const { urlRegex } = require('../utils/regex');
+const { Schema, model } = mongoose;
 
 const UserSchema = new Schema(
   {
@@ -23,7 +24,7 @@ const UserSchema = new Schema(
       type: String,
       default: 'https://pictures.s3.yandex.net/resources/avatar_1604080799.jpg',
       validate: {
-        validator: (value) => value.match(urlRegex),
+        validator: (value) => isValideURL.isUri(value),
         message: 'invalid url',
       },
     },
@@ -46,17 +47,20 @@ const UserSchema = new Schema(
   { versionKey: false }
 );
 
-
 UserSchema.statics.findUserByCredentials = function (email, password) {
   return this.findOne({ email })
     .select('+password')
     .then((user) => {
       if (!user) {
-        return Promise.reject(new Error('Incorrect email or password'));
+        return Promise.reject(
+          new ErrorHandler(401, 'Incorrect email or password')
+        );
       }
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
-          return Promise.reject(new Error('Incorrect email or password'));
+          return Promise.reject(
+            new ErrorHandler(401, 'Incorrect email or password')
+          );
         }
         return user;
       });

@@ -1,11 +1,15 @@
 const express = require('express');
-require('dotenv').config({ path: './.env' });
 const cors = require('cors');
-const app = express();
 const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const { router } = require('./routes');
+
 const { requestLogger, errorLogger } = require('./middlewars/logger');
+
+require('dotenv').config({ path: './.env' });
+
+const app = express();
+
 const { PORT = 3001, MONGO_URL = 'mongodb://localhost:27017/mydb' } =
   process.env;
 
@@ -25,7 +29,7 @@ app.use(errorLogger);
 
 app.use(errors());
 
-app.use((err, req, res, next) => {
+app.use((err, req, res) => {
   const { statusCode = 500, message } = err;
   res.status(statusCode).send({
     message: statusCode === 500 ? 'An error occurred on the server' : message,

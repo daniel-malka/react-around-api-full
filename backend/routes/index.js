@@ -1,9 +1,5 @@
 const router = require('express').Router();
 
-// const {
-//   validateAuthentication,
-//   validateUserBody,
-// } = require('../middlewars/validation');
 const { userRouter } = require('./users');
 const { cardRouter } = require('./cards');
 const nonRoute = require('./nonRoute');

@@ -1,10 +1,10 @@
 const CardSchema = require('../models/card');
-const error = require('../errors/Error');
+const ErrorHandler = require('../errors/Error');
 
 const getCards = (req, res, next) => {
   CardSchema.find({})
     .then((cards) => res.status(200).send(cards))
-    .catch(() => next(new error(500, 'An error occurred')));
+    .catch(() => next(new ErrorHandler(500, 'an error occurred')));
 };
 
 const createCard = (req, res, next) => {
@@ -15,7 +15,7 @@ const createCard = (req, res, next) => {
       if (err.name === 'ValidationError') {
         const { errors } = err;
         next(
-          new error(
+          new ErrorHandler(
             400,
             `${Object.values(errors)
               .map((error) => error.message)
@@ -23,7 +23,7 @@ const createCard = (req, res, next) => {
           )
         );
       } else {
-        next(new error(500, 'An error occured'));
+        next(new ErrorHandler(500, 'An error occured'));
       }
     });
 };
@@ -32,28 +32,31 @@ const deleteCard = (req, res, next) => {
   const { _id } = req.params;
   CardSchema.findById(_id)
     .orFail(() => {
-      throw new error(404, 'No card was found with this id');
+      next(new ErrorHandler(404, 'No card was found with this id'));
     })
     .then((card) => {
       if (!card.owner.equals(req.user._id)) {
-        return next(
-          new error(403, `you must be the card owner  in order to delete it`)
+        next(
+          new ErrorHandler(
+            403,
+            `you must be the card owner  in order to delete it`
+          )
         );
       }
       CardSchema.deleteOne(card).then(() => res.send(card));
     })
     .catch((err) => {
       if (err.name === 'CastError') {
-        next(new error(400, 'invalid card id'));
+        next(new ErrorHandler(400, 'invalid card id'));
       } else if (err.statusCode === 404) {
-        next(new error(404, err.message));
+        next(new ErrorHandler(404, err.message));
       } else {
         next(err);
       }
     });
 };
 
-const updateLike = (req, res, operator) => {
+const updateLike = (req, res, operator, next) => {
   const { _id } = req.params;
   CardSchema.findByIdAndUpdate(
     _id,
@@ -61,14 +64,14 @@ const updateLike = (req, res, operator) => {
     { new: true }
   )
     .orFail(() => {
-      throw new error(404, `no card found with this id (${_id})`);
+      next(new ErrorHandler(404, `no card found with this id (${_id})`));
     })
     .then((card) => {
       res.send(card);
     })
     .catch((err) => {
       if (err.statusCode === 400) {
-        next(new error(400, 'invalid card id'));
+        next(new ErrorHandler(400, 'invalid card id'));
       } else {
         next(err);
       }

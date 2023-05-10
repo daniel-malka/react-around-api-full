@@ -1,7 +1,8 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const UserSchema = require('../models/user');
-const error = require('../errors/Error');
+const ErrorHandler = require('../errors/Error');
+
 const { JWT_SECRET = 'abrakadabra' } = process.env;
 
 function login(req, res, next) {
@@ -9,15 +10,13 @@ function login(req, res, next) {
 
   return UserSchema.findUserByCredentials(email, password)
     .then((user) => {
-      //   res.send({ 'user id': user._id, JWT_SECRET });
-      // });
       const token = jwt.sign({ _id: user._id }, JWT_SECRET, {
         expiresIn: '7d',
       });
       res.send({ user, token });
     })
     .catch(() => {
-      next(new error(401, 'incorrect email or password'));
+      next(new ErrorHandler(401, 'incorrect email or password'));
     });
 }
 
@@ -26,7 +25,7 @@ const createUser = (req, res, next) => {
   UserSchema.findOne({ email })
     .then((user) => {
       if (user) {
-        next(new error(409, 'a user with this email already exists'));
+        next(new ErrorHandler(409, 'a user with this email already exists'));
       }
       // user does not exist, so spit out a hashed password
       return bcrypt.hash(password, 11);
@@ -37,7 +36,7 @@ const createUser = (req, res, next) => {
         .catch((err) => {
           if (err.name === 'Validation Error') {
             next(
-              new error(
+              new ErrorHandler(
                 400,
                 `${Object.values(err.errors)
                   .map((error) => error.message)
@@ -45,13 +44,13 @@ const createUser = (req, res, next) => {
               )
             );
           } else {
-            next(new error(500, 'internal server error'));
+            next(new ErrorHandler(500, 'internal server error'));
           }
         });
     });
 };
 
-const updateUserData = (req, res) => {
+const updateUserData = (req, res, next) => {
   const { _id } = req.user;
   const { name, about, avatar } = req.body;
 
@@ -62,57 +61,59 @@ const updateUserData = (req, res) => {
     { new: true, runValidators: true }
   )
     .orFail(() => {
-      throw new error(404, `User with this id (${_id}) was not found`);
+      throw new ErrorHandler(404, `User with this id (${_id}) was not found`);
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'ValidationError') {
-        next(new error(400, `the user id (${_id}) is not correct`));
+        next(new ErrorHandler(400, `the user id (${_id}) is not correct`));
       } else if (res.statusCode === 404) {
-        next(new error(404, err.message));
+        next(new ErrorHandler(404, err.message));
       } else {
         next(err);
       }
     });
 };
 
-const updateUserInfo = (req, res) => {
+const updateUserInfo = (req, res, next) => {
   const { name, about } = req.body;
 
   if (!name || !about) {
-    next(new error(400, 'name and about cant be empty'));
+    next(new ErrorHandler(400, 'name and about cant be empty'));
   }
 
   updateUserData(req, res);
 };
 
-const updateUserAvatar = (req, res) => {
+const updateUserAvatar = (req, res, next) => {
   const { avatar } = req.body;
 
   if (!avatar) {
-    next(new error(400, `avatar cant be empty`));
+    next(new ErrorHandler(400, `avatar cant be empty`));
   }
 
   updateUserData(req, res);
 };
 
-const getUsers = (req, res) => {
+const getUsers = (req, res, next) => {
   UserSchema.find({})
     .then((users) => res.status(200).send({ data: users }))
     .catch(() =>
-      next(new error(500, 'An error has occured.. please try again later'))
+      next(
+        new ErrorHandler(500, 'An error has occured.. please try again later')
+      )
     );
 };
-const getUserId = (req, res) => {
+const getUserId = (req, res, next) => {
   const { _id } = req.params;
   UserSchema.findById(_id)
     .orFail(() => {
-      next(new error(404, 'No user found with this Id'));
+      next(new ErrorHandler(404, 'No user found with this Id'));
     })
     .then((user) => res.send(user))
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new error(400, err.message));
+        next(new ErrorHandler(400, err.message));
       } else {
         next(err);
       }
@@ -122,14 +123,14 @@ const getUserId = (req, res) => {
 const getCurrentUser = (req, res, next) => {
   UserSchema.findById(req.user._id)
     .orFail(() => {
-      next(new error(404, 'No user found with this Id'));
+      next(new ErrorHandler(404, 'No user found with this Id'));
     })
     .then((user) => {
       res.send(user);
     })
     .catch((err) => {
       if (err.name === 'CastError' || err.name === 'ValidationError') {
-        next(new error(400, err.message));
+        next(new ErrorHandler(400, err.message));
       } else {
         next(err);
       }
