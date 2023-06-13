@@ -6,17 +6,17 @@ Welcome to the React Around API Full repository! This project is a full-stack we
 
 The app is running on VM on "https://around-dan.chickenkiller.com"
 
-The server is running on VM on "https://api.around-dan.chickenkiller.com"
+The vm server is currently off
 
 To run this project locally, you need to have Node.js and MongoDB and Git installed on your machine.
 
-1. Clone this repository to your local machine.
+1. Clone backend repository to your local machine.
 2. Navigate to the root directory of the project in your terminal.
 3. Run `npm install` to install the dependencies.
-4. modify react-around-api-full/frontend/src/utils/Auth.js and /Api.js from BASE_URL2 to BASE_URL
-5. go to /frontend and Run `npm run start` to start the app.
-6. Open a new Terminal, go to /backend and Run `npm run dev` to start the server.
-7. The Homepage will start running on `http://localhost:3000`;
+4. modify the url of react-around-api-full/frontend/src/utils/Auth.js and /Api.js to BASE_URL
+5.in case you cloned the frontend repo, go to /frontend and Run `npm run start` to start the app.
+6. Open a new Terminal, go to /backend and Run `npm run dev` to activate the server using nodemon.
+7. The Homepage is availabe "https://around-dan.chickenkiller.com" or locally on `http://localhost:3000`;
 8. The server will start running on `http://localhost:3001`.
 
 ## API Endpoints
