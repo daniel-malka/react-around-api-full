@@ -1,47 +1,73 @@
-React News-explorer
-Welcome to the React News Explorer API frontend repository! This project is the frontend part of a full-stack web application built with React, Node.js, and MongoDB. It allows users to search articles by keywords using the "news-explorer API worldwide," save the articles, view their images, source, title, description, and surf to the article source page.
+React Around API Full
+Welcome to React Around API Full! This repository contains the backend code for the React Around project, a full-stack web application built with React.js, Node.js, and MongoDB. The React Around application allows users to share and explore interesting locations by uploading and viewing images with geolocation data.
 
-Installation
-The app is running on a VM at "https://www.news-expo.mooo.com".
+Table of Contents:
 
-The server is running on a VM at "https://api.news-expo.mooo.com".
-
-To run this project locally, you need to have Node.js, MongoDB, and Git installed on your machine.
-
-Clone this repository to your local machine.
-Navigate to the root directory of the project in your terminal.
-Run npm install to install the dependencies.
-Run npm run start to start the app.
-The homepage will start running at http://localhost:3000.
+Getting Started
+Features
+Prerequisites
+Usage
 API Endpoints
-The API exposes the following endpoints:
-
-POST /signup - returns a bearer token upon successful registration.
-POST /signin - logs in a registered user.
-GET /articles - returns a list of all articles of the logged-in user.
-GET /users/me - returns the user with the specified userId.
-POST /articles - saves the desired article.
-DELETE /articles/:articleId - unsaves the article from the saved articles list.
-Technologies
-This project is built using the following technologies:
-
-Node.js
-Express.js
-MongoDB
-Mongoose
-bcrypt
-jsonwebtoken
-cors
-The server is using the following technologies:
-
-Google Cloud
-ssh keygen
-Nginx
-pm2
-certbot
-logs | Winston | Celebrate | Joi
 Contributing
-We welcome contributions to this project! To contribute, please fork this repository, create a new branch with your changes, and submit a pull request.
+License
+
+Getting Started
+To access the React Around frontend, visit:
+http://around-dan-usa.mooo.com
+To communicate with the backend API, use the following URL:
+http://api.around-dan-usa.mooo.com
+
+Or clone the repository:
+git clone https://github.com/daniel-malka/react-around-api-full.git
+Install the dependencies:
+
+cd react-around-api-full
+npm install
+Set up environment variables:
+
+npm run start in frontend folder app will run on: http://localhost:3000.
+
+npm run dev in backend folder server will run on http://localhost:3001.
+
+Features
+
+User authentication and authorization using JWT (JSON Web Tokens).
+Secure password hashing and storage using bcrypt.
+Image uploading and storage using the Cloudinary service.
+Geolocation tagging for images using the Mapbox API.
+CRUD (Create, Read, Update, Delete) operations for user profiles and image data.
+Server-side validation and error handling.
+Error logging using Winston and centralized error handling middleware.
+Prerequisites
+Before you begin, ensure that you have the following dependencies installed:
+
+Node.js (version 12 or later)
+MongoDB (version 4 or later)
+Cloudinary account (for image storage)
+
+Usage
+To interact with the API, you can use a tool like Postman or cURL to send requests to the defined API endpoints. Refer to the API Endpoints section below for more details on the available routes.
+
+Make sure to include the appropriate HTTP methods and endpoints to interact with the API.
+
+API Endpoints
+The following API endpoints are available:
+
+POST /signup: User registration
+POST /signin: User login
+GET /users/me: Get current user profile
+PATCH /users/me: Update current user profile
+GET /cards: Get all image cards
+POST /cards: Create a new image card
+DELETE /cards/:cardId: Delete a specific image card
+PUT /cards/:cardId/likes: Like/unlike an image card
+PATCH /cards/:cardId: Update an image card
+Contributing
+Contributions to this project are welcome! If you find any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request.
+
+Before contributing, please review the Contributing Guidelines for more information.
 
 License
-This project is licensed under the Practicum 100 - Masters School By Yandex.
+This project is licensed under the MIT License.
+
+Feel free to modify and customize this README file to suit your needs. Remember to include any additional sections or information specific to your project. Good luck with your development!

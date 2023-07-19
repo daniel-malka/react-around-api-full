@@ -1,52 +1,73 @@
-Around React is a open api, photo gallery that registerd users can do a lot of functionalities in it for example:
-users can post or delete photos of their own, un/like photos, change their name and description and change the avatar picture.
+React Around API Full
+Welcome to React Around API Full! This repository contains the backend code for the React Around project, a full-stack web application built with React.js, Node.js, and MongoDB. The React Around application allows users to share and explore interesting locations by uploading and viewing images with geolocation data.
 
-It is a continuation project. Frontend built using [HTML/CSS/JavaScript/React]. This project is designed to get aquianted with react library, get use to autentication and authorization, securty and other skills.
+Table of Contents:
 
-All authorization, registration and token requests go through to the server running on https://register.nomoreparties.co.
-by Practicum 100
-
-Registration
-Login
-Technologies Used
-File Structure
+Getting Started
+Features
+Prerequisites
+Usage
+API Endpoints
 Contributing
-
-To install this project on you local machine, follow these steps:
-
-Clone this repository to your local machine.
-Run npm install to install all dependencies.
-
-Run npm build to build / re-deploy the gh-pages link.
-Run npm start to start the development server.
-npm start will automatically open http://localhost:3000 in your browser and you will see the project.
-
-Registration
-The first step to access the functionality of Around React is to register with a valid email and password. After registering, you can login to access the features of the application. If you are already registered, you can login using your credentials that is being saved in your localStorage.
-
-Login
-To access the functionality of Around React, users must first login.
-
-Technologies Used
-Around React is built using the following technologies:
-
-HTML
-CSS
-JavaScript
-React
-
-File Structure
-Around React has a well-organized file structure. this app was innitially created by CRA (create-react-app). All the components are stored in the src/components and src/utils directory. The index.js file is the entry point for the application. The App.js file contains the main component that renders all the other components. The styles directory contains all the CSS files.
-
-Contributing
-If you want to contribute to this project, follow these steps:
-
-Fork this repository.
-Create a branch: git checkout -b <branch_name>
-Make your changes and commit them: git commit -m '<commit_message>'
-Push to the original branch: git push origin </>/<location>
-Create the pull request.
 License
-This project is licensed under the [Practicum 100] License. See the LICENSE file for details.
 
-Link ---> https://around-dan.chickenkiller.com/
+Getting Started
+To access the React Around frontend, visit:
+http://around-dan-usa.mooo.com
+To communicate with the backend API, use the following URL:
+http://api.around-dan-usa.mooo.com
+
+Or clone the repository:
+git clone https://github.com/daniel-malka/react-around-api-full.git
+Install the dependencies:
+
+cd react-around-api-full
+npm install
+Set up environment variables:
+
+npm run start in frontend folder app will run on: http://localhost:3000.
+
+npm run dev in backend folder server will run on http://localhost:3001.
+
+Features
+
+User authentication and authorization using JWT (JSON Web Tokens).
+Secure password hashing and storage using bcrypt.
+Image uploading and storage using the Cloudinary service.
+Geolocation tagging for images using the Mapbox API.
+CRUD (Create, Read, Update, Delete) operations for user profiles and image data.
+Server-side validation and error handling.
+Error logging using Winston and centralized error handling middleware.
+Prerequisites
+Before you begin, ensure that you have the following dependencies installed:
+
+Node.js (version 12 or later)
+MongoDB (version 4 or later)
+Cloudinary account (for image storage)
+
+Usage
+To interact with the API, you can use a tool like Postman or cURL to send requests to the defined API endpoints. Refer to the API Endpoints section below for more details on the available routes.
+
+Make sure to include the appropriate HTTP methods and endpoints to interact with the API.
+
+API Endpoints
+The following API endpoints are available:
+
+POST /signup: User registration
+POST /signin: User login
+GET /users/me: Get current user profile
+PATCH /users/me: Update current user profile
+GET /cards: Get all image cards
+POST /cards: Create a new image card
+DELETE /cards/:cardId: Delete a specific image card
+PUT /cards/:cardId/likes: Like/unlike an image card
+PATCH /cards/:cardId: Update an image card
+Contributing
+Contributions to this project are welcome! If you find any issues or have suggestions for improvement, please feel free to open an issue or submit a pull request.
+
+Before contributing, please review the Contributing Guidelines for more information.
+
+License
+This project is licensed under the MIT License.
+
+Feel free to modify and customize this README file to suit your needs. Remember to include any additional sections or information specific to your project. Good luck with your development!
