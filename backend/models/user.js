@@ -67,10 +67,5 @@ UserSchema.statics.findUserByCredentials = function (email, password) {
     });
 };
 
-UserSchema.methods.toJSON = function () {
-  const obj = this.toObject();
-  const { password, ...rest } = obj;
-  return rest;
-};
 
 module.exports = model('user', UserSchema);

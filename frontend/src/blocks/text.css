@@ -20,7 +20,6 @@
   margin-inline-start: 0;
   margin-inline-end: 0;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
 }
 .text__edit {
@@ -30,7 +29,7 @@
   width: 24px;
   height: 24px;
   background-color: #000;
-  background-image: url('../images/pen.svg');
+  background-image: url("../images/pen.svg");
   background-position: center;
   background-repeat: no-repeat;
   transition-duration: 500ms;
@@ -50,7 +49,6 @@
   margin-inline-start: 0;
   margin-inline-end: 0;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
 }
 

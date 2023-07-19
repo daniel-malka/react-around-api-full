@@ -1,6 +1,6 @@
 import { BASE_URL, BASE_URL2, customFetch } from "./constants-and-rep-code";
 
-export class Api {
+class Api {
   constructor({ baseUrl }) {
     this._baseUrl = baseUrl;
   }
@@ -98,6 +98,6 @@ export class Api {
 }
 
 const api = new Api({
-  baseUrl: `${BASE_URL}`,
+  baseUrl: `${BASE_URL2}`,
 });
 export default api;

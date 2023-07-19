@@ -1,18 +1,15 @@
+require('dotenv').config({ path: './.env' });
+
 const express = require('express');
 const cors = require('cors');
 const { errors } = require('celebrate');
 const mongoose = require('mongoose');
 const { router } = require('./routes');
-
 const { requestLogger, errorLogger } = require('./middlewars/logger');
-
-require('dotenv').config({ path: './.env' });
-
-const app = express();
 
 const { PORT = 3001, MONGO_URL = 'mongodb://localhost:27017/mydb' } =
   process.env;
-
+const app = express();
 mongoose.connect(MONGO_URL);
 
 app.use(requestLogger);

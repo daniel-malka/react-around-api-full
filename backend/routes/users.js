@@ -1,9 +1,11 @@
 const router = require('express').Router();
+
 const {
   validateProfile,
   validateAvatar,
   validateObjectId,
 } = require('../middlewars/validation');
+
 const {
   updateUserInfo,
   updateUserAvatar,
